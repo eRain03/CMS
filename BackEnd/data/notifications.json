@@ -1,0 +1,180 @@
+[
+  {
+    "user_id": "buyer_bob",
+    "message": "Match Found: New Deal Available!",
+    "details": {
+      "role": "Matched with Farmer",
+      "contact": "joe@farm.com",
+      "race": "Nelore",
+      "qty": 100,
+      "location": "Campinas"
+    },
+    "timestamp": 1764958309.8024168,
+    "read": false
+  },
+  {
+    "user_id": "farmer_joe",
+    "message": "New Interest in your Listing!",
+    "details": {
+      "role": "New Farmer matched you",
+      "contact": "bob@meat.com",
+      "race": "Nelore",
+      "qty": 50,
+      "location": "Unknown"
+    },
+    "timestamp": 1764958311.5026515,
+    "read": false
+  },
+  {
+    "user_id": "buyer_bob",
+    "message": "Unlocked: Nelore",
+    "details": {
+      "type": "SUPPLY",
+      "race": "Nelore",
+      "location": "Campinas",
+      "contact": "joe@farm.com"
+    },
+    "timestamp": 1764958313.0292628,
+    "read": false
+  },
+  {
+    "user_id": "bull",
+    "message": "Match Found: New Deal Available!",
+    "details": {
+      "role": "Matched with Farmer",
+      "contact": "959489042@qq.com",
+      "race": "Nelore",
+      "qty": 24,
+      "location": "Acrelândia"
+    },
+    "timestamp": 1765067650.2810814,
+    "read": false
+  },
+  {
+    "user_id": "bull",
+    "message": "New Interest in your Listing!",
+    "details": {
+      "role": "New Farmer matched you",
+      "contact": "959489042@qq.com",
+      "race": "Nelore",
+      "qty": 2,
+      "location": "Unknown"
+    },
+    "timestamp": 1765067652.0400414,
+    "read": false
+  },
+  {
+    "user_id": "bull",
+    "message": "Unlocked: Nelore",
+    "details": {
+      "type": "DEMAND",
+      "race": "Nelore",
+      "location": "Multiple Regions",
+      "contact": "959489042@qq.com"
+    },
+    "timestamp": 1765067696.2758892,
+    "read": false
+  },
+  {
+    "user_id": "bull",
+    "message": "Unlocked: Nelore",
+    "details": {
+      "type": "SUPPLY",
+      "race": "Nelore",
+      "location": "Campinas",
+      "contact": "joe@farm.com"
+    },
+    "timestamp": 1765080070.7138257,
+    "read": false
+  },
+  {
+    "user_id": "bull",
+    "message": "Unlocked: Nelore",
+    "details": {
+      "type": "SUPPLY",
+      "race": "Nelore",
+      "location": "Campinas",
+      "contact": "joe@farm.com"
+    },
+    "timestamp": 1765081492.1743078,
+    "read": false
+  },
+  {
+    "user_id": "bull",
+    "message": "Match Found: New Deal Available!",
+    "details": {
+      "role": "Matched with Buyer",
+      "contact": "959489042@qq.com",
+      "race": "Nelore",
+      "qty": 2,
+      "location": "Unknown"
+    },
+    "timestamp": 1765081562.1150987,
+    "read": false
+  },
+  {
+    "user_id": "bull",
+    "message": "New Interest in your Listing!",
+    "details": {
+      "role": "New Buyer matched you",
+      "contact": " zoller.waldirf@gmail.com",
+      "race": "Nelore",
+      "qty": 24,
+      "location": "Acrelândia"
+    },
+    "timestamp": 1765081563.5658078,
+    "read": false
+  },
+  {
+    "user_id": "Onn",
+    "message": "Match Found: New Deal Available!",
+    "details": {
+      "role": "Matched with Farmer",
+      "contact": "Tayen@erain.xin",
+      "race": "Aberdeen Angus",
+      "qty": 50,
+      "location": "Acrelândia"
+    },
+    "timestamp": 1765394126.5752418,
+    "read": false
+  },
+  {
+    "user_id": "DJ",
+    "message": "New Interest in your Listing!",
+    "details": {
+      "role": "New Farmer matched you",
+      "contact": "Tayen@erain.xin",
+      "race": "Any",
+      "qty": 50,
+      "location": "Unknown"
+    },
+    "timestamp": 1765394129.4574316,
+    "read": false
+  },
+  {
+    "user_id": "Onn",
+    "message": "Match Found: New Deal Available!",
+    "details": {
+      "role": "Matched with Farmer",
+      "contact": "tayen@erain.xin",
+      "race": "Aberdeen Angus",
+      "qty": 50,
+      "location": "Acrelândia"
+    },
+    "timestamp": 1765394130.1805427,
+    "read": false
+  },
+  {
+    "user_id": "DJ",
+    "message": "New Interest in your Listing!",
+    "details": {
+      "role": "New Farmer matched you",
+      "contact": "Tayen@erain.xin",
+      "race": "Any",
+      "qty": 50,
+      "location": "Unknown"
+    },
+    "timestamp": 1765394130.9310236,
+    "read": false
+  }
+]

@@ -1,0 +1,28 @@
+[
+  {
+    "race": "Aberdeen Angus",
+    "age": 24,
+    "sex": "Male (Bull)",
+    "quantity": 50,
+    "state": "AC",
+    "city": "Acrelândia",
+    "contact": "Tayen@erain.xin",
+    "id": "9a403739-edc1-4136-8f99-08a9f92c44ab",
+    "timestamp": 1765393321.530234,
+    "owner_id": "DJ",
+    "status": "OPEN"
+  },
+  {
+    "race": "Aberdeen Angus",
+    "age": 24,
+    "sex": "Male (Bull)",
+    "quantity": 50,
+    "state": "AC",
+    "city": "Acrelândia",
+    "contact": "tayen@erain.xin",
+    "id": "b3d612a4-128a-4cc4-91e5-177de2c40d3f",
+    "timestamp": 1765393677.7609558,
+    "owner_id": "DJ",
+    "status": "OPEN"
+  }
+]

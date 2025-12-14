@@ -1,0 +1,1155 @@
+--- Logs Cleared ---
+2025-12-08 21:06:52,329 - ERROR - ❌ Unhandled Error: division by zero
+Traceback (most recent call last):
+  File "/root/Cattle_Match_BackED/main.py", line 79, in log_requests
+    response = await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 125, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 111, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 391, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 292, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+  File "/usr/local/lib/python3.10/dist-packages/anyio/to_thread.py", line 61, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 2525, in run_sync_in_worker_thread
+    return await future
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 986, in run
+    result = context.run(func, *args)
+  File "/root/Cattle_Match_BackED/main.py", line 589, in trigger_crash
+    result = 1 / 0
+ZeroDivisionError: division by zero
+
+2025-12-10 18:44:46,716 - ERROR - ❌ Unhandled Error: string indices must be integers
+Traceback (most recent call last):
+  File "/root/Cattle_Match_BackED/main.py", line 272, in log_requests
+    response = await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 125, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 111, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 391, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 292, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+  File "/usr/local/lib/python3.10/dist-packages/anyio/to_thread.py", line 61, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 2525, in run_sync_in_worker_thread
+    return await future
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 986, in run
+    result = context.run(func, *args)
+  File "/root/Cattle_Match_BackED/main.py", line 165, in get_my_received_proposals
+    my_supply_ids = [f['id'] for f in farmers if f['owner_id'] == user['username']]
+  File "/root/Cattle_Match_BackED/main.py", line 165, in <listcomp>
+    my_supply_ids = [f['id'] for f in farmers if f['owner_id'] == user['username']]
+TypeError: string indices must be integers
+
+2025-12-10 18:44:48,007 - ERROR - ❌ Unhandled Error: string indices must be integers
+Traceback (most recent call last):
+  File "/root/Cattle_Match_BackED/main.py", line 272, in log_requests
+    response = await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 125, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 111, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 391, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 292, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+  File "/usr/local/lib/python3.10/dist-packages/anyio/to_thread.py", line 61, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 2525, in run_sync_in_worker_thread
+    return await future
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 986, in run
+    result = context.run(func, *args)
+  File "/root/Cattle_Match_BackED/main.py", line 165, in get_my_received_proposals
+    my_supply_ids = [f['id'] for f in farmers if f['owner_id'] == user['username']]
+  File "/root/Cattle_Match_BackED/main.py", line 165, in <listcomp>
+    my_supply_ids = [f['id'] for f in farmers if f['owner_id'] == user['username']]
+TypeError: string indices must be integers
+
+2025-12-10 18:45:05,828 - ERROR - ❌ Unhandled Error: string indices must be integers
+Traceback (most recent call last):
+  File "/root/Cattle_Match_BackED/main.py", line 272, in log_requests
+    response = await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 125, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 111, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 391, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 292, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+  File "/usr/local/lib/python3.10/dist-packages/anyio/to_thread.py", line 61, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 2525, in run_sync_in_worker_thread
+    return await future
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 986, in run
+    result = context.run(func, *args)
+  File "/root/Cattle_Match_BackED/main.py", line 165, in get_my_received_proposals
+    my_supply_ids = [f['id'] for f in farmers if f['owner_id'] == user['username']]
+  File "/root/Cattle_Match_BackED/main.py", line 165, in <listcomp>
+    my_supply_ids = [f['id'] for f in farmers if f['owner_id'] == user['username']]
+TypeError: string indices must be integers
+
+2025-12-10 18:47:28,846 - ERROR - ❌ Unhandled Error: string indices must be integers
+Traceback (most recent call last):
+  File "/root/Cattle_Match_BackED/main.py", line 272, in log_requests
+    response = await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 125, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 111, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 391, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 292, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+  File "/usr/local/lib/python3.10/dist-packages/anyio/to_thread.py", line 61, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 2525, in run_sync_in_worker_thread
+    return await future
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 986, in run
+    result = context.run(func, *args)
+  File "/root/Cattle_Match_BackED/main.py", line 165, in get_my_received_proposals
+    my_supply_ids = [f['id'] for f in farmers if f['owner_id'] == user['username']]
+  File "/root/Cattle_Match_BackED/main.py", line 165, in <listcomp>
+    my_supply_ids = [f['id'] for f in farmers if f['owner_id'] == user['username']]
+TypeError: string indices must be integers
+
+2025-12-10 18:47:30,782 - ERROR - ❌ Unhandled Error: string indices must be integers
+Traceback (most recent call last):
+  File "/root/Cattle_Match_BackED/main.py", line 272, in log_requests
+    response = await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 125, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 111, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 391, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 292, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+  File "/usr/local/lib/python3.10/dist-packages/anyio/to_thread.py", line 61, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 2525, in run_sync_in_worker_thread
+    return await future
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 986, in run
+    result = context.run(func, *args)
+  File "/root/Cattle_Match_BackED/main.py", line 165, in get_my_received_proposals
+    my_supply_ids = [f['id'] for f in farmers if f['owner_id'] == user['username']]
+  File "/root/Cattle_Match_BackED/main.py", line 165, in <listcomp>
+    my_supply_ids = [f['id'] for f in farmers if f['owner_id'] == user['username']]
+TypeError: string indices must be integers
+
+2025-12-10 18:47:43,846 - ERROR - ❌ Unhandled Error: string indices must be integers
+Traceback (most recent call last):
+  File "/root/Cattle_Match_BackED/main.py", line 272, in log_requests
+    response = await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 125, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 111, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 391, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 292, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+  File "/usr/local/lib/python3.10/dist-packages/anyio/to_thread.py", line 61, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 2525, in run_sync_in_worker_thread
+    return await future
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 986, in run
+    result = context.run(func, *args)
+  File "/root/Cattle_Match_BackED/main.py", line 165, in get_my_received_proposals
+    my_supply_ids = [f['id'] for f in farmers if f['owner_id'] == user['username']]
+  File "/root/Cattle_Match_BackED/main.py", line 165, in <listcomp>
+    my_supply_ids = [f['id'] for f in farmers if f['owner_id'] == user['username']]
+TypeError: string indices must be integers
+
+2025-12-10 18:51:34,935 - ERROR - ❌ Unhandled Error: [Errno 2] No such file or directory: 'uploads/eda15edd-4bd3-4c3a-a248-66fe46438c67.pdf'
+Traceback (most recent call last):
+  File "/root/Cattle_Match_BackED/main.py", line 272, in log_requests
+    response = await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 125, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 111, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 391, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 290, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/root/Cattle_Match_BackED/main.py", line 72, in upload_file
+    with open(file_path, "wb") as buffer:
+FileNotFoundError: [Errno 2] No such file or directory: 'uploads/eda15edd-4bd3-4c3a-a248-66fe46438c67.pdf'
+
+2025-12-10 18:51:34,952 - ERROR - ❌ Unhandled Error: [Errno 2] No such file or directory: 'uploads/6d93164f-991c-4729-819d-327e376f18a4.pdf'
+Traceback (most recent call last):
+  File "/root/Cattle_Match_BackED/main.py", line 272, in log_requests
+    response = await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 125, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 111, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 391, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 290, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/root/Cattle_Match_BackED/main.py", line 72, in upload_file
+    with open(file_path, "wb") as buffer:
+FileNotFoundError: [Errno 2] No such file or directory: 'uploads/6d93164f-991c-4729-819d-327e376f18a4.pdf'
+
+2025-12-10 18:51:34,962 - ERROR - ❌ Unhandled Error: [Errno 2] No such file or directory: 'uploads/e8fea33e-adb8-49a1-bd47-3af6005b5247.PNG'
+Traceback (most recent call last):
+  File "/root/Cattle_Match_BackED/main.py", line 272, in log_requests
+    response = await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 125, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 111, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 391, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 290, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/root/Cattle_Match_BackED/main.py", line 72, in upload_file
+    with open(file_path, "wb") as buffer:
+FileNotFoundError: [Errno 2] No such file or directory: 'uploads/e8fea33e-adb8-49a1-bd47-3af6005b5247.PNG'
+
+2025-12-10 18:51:37,211 - ERROR - ❌ Unhandled Error: [Errno 2] No such file or directory: 'uploads/f3ab7a3b-3deb-4d43-be25-49445fd48723.pdf'
+Traceback (most recent call last):
+  File "/root/Cattle_Match_BackED/main.py", line 272, in log_requests
+    response = await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 125, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 111, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 391, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 290, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/root/Cattle_Match_BackED/main.py", line 72, in upload_file
+    with open(file_path, "wb") as buffer:
+FileNotFoundError: [Errno 2] No such file or directory: 'uploads/f3ab7a3b-3deb-4d43-be25-49445fd48723.pdf'
+
+2025-12-10 18:51:37,220 - ERROR - ❌ Unhandled Error: [Errno 2] No such file or directory: 'uploads/7f0e43c5-5ade-4f47-b389-f1c670fd3057.PNG'
+Traceback (most recent call last):
+  File "/root/Cattle_Match_BackED/main.py", line 272, in log_requests
+    response = await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 125, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 111, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 391, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 290, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/root/Cattle_Match_BackED/main.py", line 72, in upload_file
+    with open(file_path, "wb") as buffer:
+FileNotFoundError: [Errno 2] No such file or directory: 'uploads/7f0e43c5-5ade-4f47-b389-f1c670fd3057.PNG'
+
+2025-12-10 18:51:37,225 - ERROR - ❌ Unhandled Error: [Errno 2] No such file or directory: 'uploads/f34b8d0d-70d2-43b5-82e0-3af56bfb08f9.pdf'
+Traceback (most recent call last):
+  File "/root/Cattle_Match_BackED/main.py", line 272, in log_requests
+    response = await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 125, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 111, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 391, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 290, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/root/Cattle_Match_BackED/main.py", line 72, in upload_file
+    with open(file_path, "wb") as buffer:
+FileNotFoundError: [Errno 2] No such file or directory: 'uploads/f34b8d0d-70d2-43b5-82e0-3af56bfb08f9.pdf'
+
+2025-12-10 18:51:53,552 - ERROR - ❌ Unhandled Error: [Errno 2] No such file or directory: 'uploads/f2b8728f-920d-43d7-be4c-dce1c24a4a42.pdf'
+Traceback (most recent call last):
+  File "/root/Cattle_Match_BackED/main.py", line 272, in log_requests
+    response = await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 125, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 111, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 391, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 290, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/root/Cattle_Match_BackED/main.py", line 72, in upload_file
+    with open(file_path, "wb") as buffer:
+FileNotFoundError: [Errno 2] No such file or directory: 'uploads/f2b8728f-920d-43d7-be4c-dce1c24a4a42.pdf'
+
+2025-12-10 18:51:53,569 - ERROR - ❌ Unhandled Error: [Errno 2] No such file or directory: 'uploads/9136cd08-a2ae-4e5d-8b5b-c8f8693d3f46.pdf'
+Traceback (most recent call last):
+  File "/root/Cattle_Match_BackED/main.py", line 272, in log_requests
+    response = await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 125, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 111, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 391, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 290, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/root/Cattle_Match_BackED/main.py", line 72, in upload_file
+    with open(file_path, "wb") as buffer:
+FileNotFoundError: [Errno 2] No such file or directory: 'uploads/9136cd08-a2ae-4e5d-8b5b-c8f8693d3f46.pdf'
+
+2025-12-10 18:51:53,583 - ERROR - ❌ Unhandled Error: [Errno 2] No such file or directory: 'uploads/e223a2c6-0fab-448a-a0d5-284ce7632fa4.PNG'
+Traceback (most recent call last):
+  File "/root/Cattle_Match_BackED/main.py", line 272, in log_requests
+    response = await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 125, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 111, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 391, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 290, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/root/Cattle_Match_BackED/main.py", line 72, in upload_file
+    with open(file_path, "wb") as buffer:
+FileNotFoundError: [Errno 2] No such file or directory: 'uploads/e223a2c6-0fab-448a-a0d5-284ce7632fa4.PNG'
+
+2025-12-10 18:52:36,348 - ERROR - ❌ Unhandled Error: string indices must be integers
+Traceback (most recent call last):
+  File "/root/Cattle_Match_BackED/main.py", line 272, in log_requests
+    response = await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 125, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 111, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 391, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 292, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+  File "/usr/local/lib/python3.10/dist-packages/anyio/to_thread.py", line 61, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 2525, in run_sync_in_worker_thread
+    return await future
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 986, in run
+    result = context.run(func, *args)
+  File "/root/Cattle_Match_BackED/main.py", line 165, in get_my_received_proposals
+    my_supply_ids = [f['id'] for f in farmers if f['owner_id'] == user['username']]
+  File "/root/Cattle_Match_BackED/main.py", line 165, in <listcomp>
+    my_supply_ids = [f['id'] for f in farmers if f['owner_id'] == user['username']]
+TypeError: string indices must be integers
+
+2025-12-10 18:52:55,532 - ERROR - ❌ Unhandled Error: string indices must be integers
+Traceback (most recent call last):
+  File "/root/Cattle_Match_BackED/main.py", line 272, in log_requests
+    response = await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 125, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 111, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 391, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 292, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+  File "/usr/local/lib/python3.10/dist-packages/anyio/to_thread.py", line 61, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 2525, in run_sync_in_worker_thread
+    return await future
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 986, in run
+    result = context.run(func, *args)
+  File "/root/Cattle_Match_BackED/main.py", line 165, in get_my_received_proposals
+    my_supply_ids = [f['id'] for f in farmers if f['owner_id'] == user['username']]
+  File "/root/Cattle_Match_BackED/main.py", line 165, in <listcomp>
+    my_supply_ids = [f['id'] for f in farmers if f['owner_id'] == user['username']]
+TypeError: string indices must be integers
+
+2025-12-10 18:56:14,102 - ERROR - ❌ Unhandled Error: string indices must be integers
+Traceback (most recent call last):
+  File "/root/Cattle_Match_BackED/main.py", line 272, in log_requests
+    response = await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 125, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 111, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 391, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 292, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+  File "/usr/local/lib/python3.10/dist-packages/anyio/to_thread.py", line 61, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 2525, in run_sync_in_worker_thread
+    return await future
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 986, in run
+    result = context.run(func, *args)
+  File "/root/Cattle_Match_BackED/main.py", line 165, in get_my_received_proposals
+    my_supply_ids = [f['id'] for f in farmers if f['owner_id'] == user['username']]
+  File "/root/Cattle_Match_BackED/main.py", line 165, in <listcomp>
+    my_supply_ids = [f['id'] for f in farmers if f['owner_id'] == user['username']]
+TypeError: string indices must be integers
+
+2025-12-10 18:56:57,647 - ERROR - ❌ Unhandled Error: string indices must be integers
+Traceback (most recent call last):
+  File "/root/Cattle_Match_BackED/main.py", line 272, in log_requests
+    response = await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 125, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 111, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 391, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 292, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+  File "/usr/local/lib/python3.10/dist-packages/anyio/to_thread.py", line 61, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 2525, in run_sync_in_worker_thread
+    return await future
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 986, in run
+    result = context.run(func, *args)
+  File "/root/Cattle_Match_BackED/main.py", line 165, in get_my_received_proposals
+    my_supply_ids = [f['id'] for f in farmers if f['owner_id'] == user['username']]
+  File "/root/Cattle_Match_BackED/main.py", line 165, in <listcomp>
+    my_supply_ids = [f['id'] for f in farmers if f['owner_id'] == user['username']]
+TypeError: string indices must be integers
+
+2025-12-10 18:57:00,696 - ERROR - ❌ Unhandled Error: string indices must be integers
+Traceback (most recent call last):
+  File "/root/Cattle_Match_BackED/main.py", line 272, in log_requests
+    response = await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 125, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 111, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 391, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 292, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+  File "/usr/local/lib/python3.10/dist-packages/anyio/to_thread.py", line 61, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 2525, in run_sync_in_worker_thread
+    return await future
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 986, in run
+    result = context.run(func, *args)
+  File "/root/Cattle_Match_BackED/main.py", line 165, in get_my_received_proposals
+    my_supply_ids = [f['id'] for f in farmers if f['owner_id'] == user['username']]
+  File "/root/Cattle_Match_BackED/main.py", line 165, in <listcomp>
+    my_supply_ids = [f['id'] for f in farmers if f['owner_id'] == user['username']]
+TypeError: string indices must be integers
+
+2025-12-10 18:58:47,283 - ERROR - ❌ Unhandled Error: string indices must be integers
+Traceback (most recent call last):
+  File "/root/Cattle_Match_BackED/main.py", line 56, in log_requests
+    response = await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 125, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 111, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 391, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 292, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+  File "/usr/local/lib/python3.10/dist-packages/anyio/to_thread.py", line 61, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 2525, in run_sync_in_worker_thread
+    return await future
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 986, in run
+    result = context.run(func, *args)
+  File "/root/Cattle_Match_BackED/main.py", line 284, in get_my_received_proposals
+    my_supply_ids = [f['id'] for f in farmers if isinstance(f, dict) and f.get('owner_id') == user['username']]
+  File "/root/Cattle_Match_BackED/main.py", line 284, in <listcomp>
+    my_supply_ids = [f['id'] for f in farmers if isinstance(f, dict) and f.get('owner_id') == user['username']]
+TypeError: string indices must be integers
+
+2025-12-10 18:59:26,252 - ERROR - ❌ Unhandled Error: string indices must be integers
+Traceback (most recent call last):
+  File "/root/Cattle_Match_BackED/main.py", line 56, in log_requests
+    response = await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 125, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 111, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 391, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 292, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+  File "/usr/local/lib/python3.10/dist-packages/anyio/to_thread.py", line 61, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 2525, in run_sync_in_worker_thread
+    return await future
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 986, in run
+    result = context.run(func, *args)
+  File "/root/Cattle_Match_BackED/main.py", line 284, in get_my_received_proposals
+    my_supply_ids = [f['id'] for f in farmers if isinstance(f, dict) and f.get('owner_id') == user['username']]
+  File "/root/Cattle_Match_BackED/main.py", line 284, in <listcomp>
+    my_supply_ids = [f['id'] for f in farmers if isinstance(f, dict) and f.get('owner_id') == user['username']]
+TypeError: string indices must be integers
+
+2025-12-10 19:02:03,134 - ERROR - ❌ Unhandled Error: string indices must be integers
+Traceback (most recent call last):
+  File "/root/Cattle_Match_BackED/main.py", line 56, in log_requests
+    response = await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 125, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 111, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 391, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 292, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+  File "/usr/local/lib/python3.10/dist-packages/anyio/to_thread.py", line 61, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 2525, in run_sync_in_worker_thread
+    return await future
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 986, in run
+    result = context.run(func, *args)
+  File "/root/Cattle_Match_BackED/main.py", line 284, in get_my_received_proposals
+    my_supply_ids = [f['id'] for f in farmers if isinstance(f, dict) and f.get('owner_id') == user['username']]
+  File "/root/Cattle_Match_BackED/main.py", line 284, in <listcomp>
+    my_supply_ids = [f['id'] for f in farmers if isinstance(f, dict) and f.get('owner_id') == user['username']]
+TypeError: string indices must be integers
+

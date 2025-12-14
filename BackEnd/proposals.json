@@ -1,0 +1,22 @@
+[
+    {
+        "id": "8b498ca5-cdd3-40ac-ba3c-b0a6c403de84",
+        "supply_id": "b3d612a4-128a-4cc4-91e5-177de2c40d3f",
+        "buyer_id": "Onn",
+        "buyer_contact": "+11111111111",
+        "price_offer": 66600.0,
+        "message": "I am interested in your 50x Aberdeen Angus.",
+        "status": "PENDING",
+        "timestamp": 1765394168.003345
+    },
+    {
+        "id": "bc4d11c3-089c-4dfb-9b8d-64f5670ae6b7",
+        "supply_id": "1bd4713c-e93f-41e0-9e7c-cdd17f4bd1f3",
+        "buyer_id": "123",
+        "buyer_contact": "123",
+        "price_offer": 50000.0,
+        "message": "I am interested in your 50x Aberdeen Angus.",
+        "status": "PAID",
+        "timestamp": 1765394736.166479
+    }
+]

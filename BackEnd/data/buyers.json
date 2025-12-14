@@ -1,0 +1,53 @@
+[
+  {
+    "targets": [
+      {
+        "state": "SP",
+        "city": "ANY"
+      }
+    ],
+    "race": "Nelore",
+    "ageMin": 12,
+    "ageMax": 36,
+    "sex": "Any",
+    "quantity": 50,
+    "contact": "bob@meat.com",
+    "id": "105475e9-dddf-4745-a40e-bb163de7e0af",
+    "timestamp": 1764958309.8019218,
+    "owner_id": "buyer_bob"
+  },
+  {
+    "targets": [
+      {
+        "state": "AC",
+        "city": "Acrelândia"
+      }
+    ],
+    "race": "Nelore",
+    "ageMin": 24,
+    "ageMax": 24,
+    "sex": "Any",
+    "quantity": 2,
+    "contact": "959489042@qq.com",
+    "id": "1d7b3a0e-cd81-40d9-b5d6-79e3983bf447",
+    "timestamp": 1765067650.280042,
+    "owner_id": "bull"
+  },
+  {
+    "targets": [
+      {
+        "state": "AC",
+        "city": "Acrelândia"
+      }
+    ],
+    "race": "Any",
+    "ageMin": 24,
+    "ageMax": 50,
+    "sex": "Any",
+    "quantity": 50,
+    "contact": "Tayen@erain.xin",
+    "id": "6b03a9f5-83e5-4c0d-819f-568f2a422412",
+    "timestamp": 1765394126.573438,
+    "owner_id": "Onn"
+  }
+]

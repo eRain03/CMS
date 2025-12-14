@@ -1,0 +1,53 @@
+[
+    {
+        "id": "44dfc6b8-980a-4d07-8a84-19a31ebd13ad",
+        "user_id": "DJ",
+        "message": "New Offer: R$ 50000.0",
+        "details": {
+            "id": "bc4d11c3-089c-4dfb-9b8d-64f5670ae6b7",
+            "supply_id": "1bd4713c-e93f-41e0-9e7c-cdd17f4bd1f3",
+            "buyer_id": "123",
+            "buyer_contact": "123",
+            "price_offer": 50000.0,
+            "message": "I am interested in your 50x Aberdeen Angus.",
+            "status": "PENDING",
+            "timestamp": 1765394736.166479
+        },
+        "timestamp": 1765394736.1671917,
+        "read": false
+    },
+    {
+        "id": "9011fd83-dbcf-415a-9b9f-ed8ed9fa5750",
+        "user_id": "123",
+        "message": "Offer Accepted! Pay fee to lock.",
+        "details": {
+            "id": "bc4d11c3-089c-4dfb-9b8d-64f5670ae6b7",
+            "supply_id": "1bd4713c-e93f-41e0-9e7c-cdd17f4bd1f3",
+            "buyer_id": "123",
+            "buyer_contact": "123",
+            "price_offer": 50000.0,
+            "message": "I am interested in your 50x Aberdeen Angus.",
+            "status": "ACCEPTED",
+            "timestamp": 1765394736.166479
+        },
+        "timestamp": 1765394747.0438452,
+        "read": false
+    },
+    {
+        "id": "19f4acdd-3890-469c-ad7c-7327310ab7b4",
+        "user_id": "DJ",
+        "message": "Deal Closed! Buyer paid fee.",
+        "details": {
+            "id": "bc4d11c3-089c-4dfb-9b8d-64f5670ae6b7",
+            "supply_id": "1bd4713c-e93f-41e0-9e7c-cdd17f4bd1f3",
+            "buyer_id": "123",
+            "buyer_contact": "123",
+            "price_offer": 50000.0,
+            "message": "I am interested in your 50x Aberdeen Angus.",
+            "status": "PAID",
+            "timestamp": 1765394736.166479
+        },
+        "timestamp": 1765394756.447837,
+        "read": false
+    }
+]

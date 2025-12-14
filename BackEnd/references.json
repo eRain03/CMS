@@ -1,0 +1,28 @@
+{
+    "breeds": [
+        "Aberdeen Angus",
+        "Brahman",
+        "Brangus",
+        "Charolês",
+        "Fleckvieh",
+        "Gir",
+        "Girolando",
+        "Guzerá",
+        "Holandês",
+        "Illawarra",
+        "Jersey",
+        "Limousin",
+        "Nelore",
+        "Nelore Pintado",
+        "Outros",
+        "Pardo Suíço",
+        "Red Angus",
+        "Red Brahman",
+        "Senepol",
+        "Simental",
+        "Sindi",
+        "Tabapuã",
+        "Wagyu"
+    ],
+    "custom_cities": []
+}
