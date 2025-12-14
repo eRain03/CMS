@@ -1,0 +1,39 @@
+[
+  {
+    "username": "joe",
+    "password": "$2b$12$YolfF0pxDLGSAx9H0VK5Bu/9uKgPC73OUJUKGokRBa9Rs1kPQaRQ2",
+    "email": "admin@platform.com",
+    "first_name": "Super",
+    "last_name": "Admin",
+    "phone": "00000000",
+    "address": "HQ",
+    "role": "admin",
+    "created_at": 1765144907.996527
+  },
+  {
+    "username": "DJ",
+    "password": "$2b$12$jgjdhWuZbTgwWdt80RJ8uuVOBtIWS6jXdRDN4AwIlYVd60hFdd5ja",
+    "email": "DJ@cc.sss.c",
+    "first_name": "DJ",
+    "last_name": "DJ",
+    "phone": "+1000000",
+    "address": "WWSTREET",
+    "tax_id": "31789",
+    "ie": "3178923712",
+    "created_at": 1765147023.9228709
+  },
+  {
+    "username": "Onn",
+    "password": "$2b$12$LVWIcJT8d9VYXwElx4IOTuw9lR3jJhWdtkfmiKIq7Mu2j6nD2tSki",
+    "email": "Onn@Onn.cccccc",
+    "first_name": "Onn",
+    "last_name": "Onn",
+    "phone": "+11111111111",
+    "address": "TEST",
+    "tax_id": "123456",
+    "ie": "123456",
+    "role": "user",
+    "created_at": 1765394071.031804,
+    "is_active": true
+  }
+]

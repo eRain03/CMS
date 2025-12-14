@@ -1,0 +1,54 @@
+[
+    {
+        "username": "joe",
+        "password": "$2b$12$YolfF0pxDLGSAx9H0VK5Bu/9uKgPC73OUJUKGokRBa9Rs1kPQaRQ2",
+        "email": "admin@platform.com",
+        "first_name": "Super",
+        "last_name": "Admin",
+        "phone": "00000000",
+        "address": "HQ",
+        "role": "admin",
+        "created_at": 1765144907.996527
+    },
+    {
+        "username": "DJ",
+        "password": "$2b$12$jgjdhWuZbTgwWdt80RJ8uuVOBtIWS6jXdRDN4AwIlYVd60hFdd5ja",
+        "email": "DJ@cc.sss.c",
+        "first_name": "DJ",
+        "last_name": "DJ",
+        "phone": "+1000000",
+        "address": "WWSTREET",
+        "tax_id": "31789",
+        "ie": "3178923712",
+        "created_at": 1765147023.9228709,
+        "is_active": true
+    },
+    {
+        "username": "DJ123",
+        "password": "$2b$12$qR1y2bCtCmCgMcLLHaMrrOOyeWxX6mSPGoUqgXVqLmjdlkzeIpMwO",
+        "email": "DJ",
+        "first_name": "DJ",
+        "last_name": "DJ",
+        "phone": "DJ",
+        "address": "DJ",
+        "tax_id": "415",
+        "ie": "45",
+        "role": "user",
+        "created_at": 1765394477.3258848,
+        "is_active": true
+    },
+    {
+        "username": "123",
+        "password": "$2b$12$SiqwCOffSDdIav/0LdMvjeVNQSSPiY3X3pmdMVpVY6rvxKM0/VLc2",
+        "email": "123",
+        "first_name": "123",
+        "last_name": "123",
+        "phone": "123",
+        "address": "123",
+        "tax_id": "123",
+        "ie": "123",
+        "role": "user",
+        "created_at": 1765394727.4943905,
+        "is_active": true
+    }
+]

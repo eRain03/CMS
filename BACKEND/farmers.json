@@ -1,0 +1,16 @@
+[
+    {
+        "race": "Aberdeen Angus",
+        "age": 24,
+        "sex": "Male (Bull)",
+        "quantity": 50,
+        "state": "AC",
+        "city": "Acrelândia",
+        "contact": "5454",
+        "id": "1bd4713c-e93f-41e0-9e7c-cdd17f4bd1f3",
+        "timestamp": 1765394665.9581792,
+        "owner_id": "DJ",
+        "status": "SOLD",
+        "buyer_id": "123"
+    }
+]
