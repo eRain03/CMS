@@ -36,6 +36,12 @@ const routes = [
     component: FinalizeView,
     meta: { requiresAuth: true }
   },
+  {
+    path: '/payment/:id',
+    name: 'finalPayment',
+    component: () => import('./FinalPaymentView.vue'),
+    meta: { requiresAuth: true }
+  },
 
   // --- 后台页面 (Admin) ---
   {

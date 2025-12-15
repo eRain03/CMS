@@ -24,6 +24,12 @@ const form = reactive({
   city: '',
   contact: '',
   negotiable_date: '', // ✅ 新增：可谈判日期 (有效期)
+  // New fields for enhanced sale listing
+  category: '',
+  estimated_weight: null,
+  availability_start: '',
+  availability_end: '',
+  weight_type: 'live', // 'live' or 'dead'
 })
 
 // 3. 文件数据
@@ -220,8 +226,39 @@ const submitForm = async () => {
             </select>
           </div>
           <div class="form-group half">
-            <label>📅 Valid Until</label>
-            <input type="date" v-model="form.negotiable_date" required />
+            <label>Category</label>
+            <select v-model="form.category">
+              <option value="">Select Category</option>
+              <option>Beef Cattle</option>
+              <option>Dairy Cattle</option>
+              <option>Dual Purpose</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group half">
+            <label>Weight Type *</label>
+            <select v-model="form.weight_type" required>
+              <option value="live">Live Weight</option>
+              <option value="dead">Dead Weight (Carcass)</option>
+            </select>
+            <small class="hint">Live: weighed at loading. Dead: weighed after slaughter by buyer.</small>
+          </div>
+          <div class="form-group half">
+            <label>Estimated Weight (kg)</label>
+            <input type="number" v-model.number="form.estimated_weight" placeholder="Total estimated weight" step="0.01" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group half">
+            <label>📅 Availability Start</label>
+            <input type="date" v-model="form.availability_start" />
+          </div>
+          <div class="form-group half">
+            <label>📅 Availability End</label>
+            <input type="date" v-model="form.availability_end" />
           </div>
         </div>
 

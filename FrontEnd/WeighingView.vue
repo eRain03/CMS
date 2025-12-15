@@ -11,6 +11,8 @@ const listing = ref(null)
 const weights = ref([])
 const loading = ref(false)
 const submitting = ref(false)
+const weightType = ref('live')  // 'live' or 'dead'
+const performInternalWeighing = ref(false)  // For dead weight: whether to perform internal weighing
 
 const currentBatch = ref({
   quantity: null,
@@ -32,6 +34,9 @@ const loadListing = async () => {
     })
     const data = await res.json()
     listing.value = data.supply.find(l => l.id === listingId)
+    if (listing.value) {
+      weightType.value = listing.value.weight_type || 'live'
+    }
   } catch (error) {
     console.error('加载列表失败:', error)
   }
@@ -130,6 +135,36 @@ const addWeightEntry = async () => {
   }
 }
 
+// 死重模式：处理内部称重（可选）
+const handleInternalWeight = async () => {
+  if (!performInternalWeighing.value) {
+    // 跳过称重，直接标记为可运输
+    submitting.value = true
+    const token = localStorage.getItem('token')
+    try {
+      const res = await fetch(`${API_BASE}/api/listings/${listingId}/internal-weight`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ perform_weighing: false })
+      })
+      if (!res.ok) throw new Error('操作失败')
+      alert('已标记为可运输（未进行内部称重）')
+      goToFinalize()
+    } catch (error) {
+      console.error('操作失败:', error)
+      alert('操作失败,请重试')
+    } finally {
+      submitting.value = false
+    }
+  } else {
+    // 执行内部称重（使用与生重相同的流程）
+    await addWeightEntry()
+  }
+}
+
 // 完成称重
 const goToFinalize = () => {
   router.push(`/finalize/${listingId}`)
@@ -199,8 +234,70 @@ const formatTime = (timestamp) => {
           </div>
         </div>
 
-        <!-- 添加称重表单 -->
-        <div class="add-weight-section">
+        <!-- 死重模式：内部称重选择 -->
+        <div v-if="weightType === 'dead'" class="dead-weight-section">
+          <h3>Dead Weight Transaction - Internal Weighing (Optional)</h3>
+          <p class="info-text">
+            For dead weight transactions, the final weighing is done by the slaughterhouse after slaughter.
+            You can optionally perform an internal weighing for your own tracking purposes.
+          </p>
+          
+          <div class="form-group">
+            <label>
+              <input type="checkbox" v-model="performInternalWeighing" />
+              Perform internal weighing for tracking
+            </label>
+          </div>
+
+          <div v-if="performInternalWeighing" class="add-weight-section">
+            <h4>Internal Weight Recording</h4>
+            <form @submit.prevent="handleInternalWeight">
+              <div class="row">
+                <div class="form-group half">
+                  <label>Quantity *</label>
+                  <input
+                    type="number"
+                    v-model.number="currentBatch.quantity"
+                    required
+                    min="1"
+                    :max="listing?.quantity || 0"
+                    placeholder="e.g. 5"
+                  />
+                </div>
+
+                <div class="form-group half">
+                  <label>Total Weight (kg) *</label>
+                  <input
+                    type="number"
+                    v-model.number="currentBatch.total_weight"
+                    required
+                    min="0.01"
+                    step="0.01"
+                    placeholder="e.g. 2500.50"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                class="btn-add-weight"
+                :disabled="submitting || !canAddWeight"
+              >
+                {{ submitting ? 'Recording...' : 'Record Internal Weight' }}
+              </button>
+            </form>
+          </div>
+
+          <div v-else class="skip-section">
+            <button @click="handleInternalWeight" class="btn-skip" :disabled="submitting">
+              {{ submitting ? 'Processing...' : 'Skip Internal Weighing & Proceed' }}
+            </button>
+            <p class="hint">You can proceed directly to document upload without internal weighing.</p>
+          </div>
+        </div>
+
+        <!-- 生重模式：标准称重表单 -->
+        <div v-else class="add-weight-section">
           <h3>Batch #{{ nextBatchNumber }} Weighing</h3>
 
           <form @submit.prevent="addWeightEntry">
@@ -348,6 +445,14 @@ input { width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 6p
 .success-msg { font-size: 1.1rem; margin-bottom: 20px; font-weight: 500; }
 .btn-finalize { padding: 14px 30px; background: white; color: #38a169; border: none; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: transform 0.2s; }
 .btn-finalize:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }
+
+.dead-weight-section { background: #f0f4ff; padding: 25px; border-radius: 12px; border: 2px solid #9f7aea; margin-bottom: 30px; }
+.dead-weight-section h3 { color: #553c9a; margin-top: 0; }
+.info-text { color: #6b46c1; font-size: 0.9rem; margin-bottom: 20px; line-height: 1.6; }
+.skip-section { text-align: center; padding: 20px; }
+.btn-skip { padding: 14px 30px; background: #9f7aea; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: background 0.2s; }
+.btn-skip:hover:not(:disabled) { background: #805ad5; }
+.btn-skip:disabled { background: #c4b5fd; cursor: not-allowed; }
 
 @media (max-width: 768px) {
   .form-page { padding: 1rem; }

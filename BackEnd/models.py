@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import List, Optional
+from datetime import datetime
 
 # Farmer: 必须精确到城市
 class FarmerCreate(BaseModel):
@@ -10,6 +11,14 @@ class FarmerCreate(BaseModel):
     state: str       # 例如 "PA"
     city: str        # 例如 "Santarém"
     contact: str
+    # New fields for enhanced sale listing
+    category: Optional[str] = None  # e.g., "Beef Cattle", "Dairy Cattle"
+    estimated_weight: Optional[float] = None  # Estimated total weight in kg
+    availability_start: Optional[str] = None  # ISO date string
+    availability_end: Optional[str] = None    # ISO date string
+    weight_type: Optional[str] = "live"  # "live" or "dead" (carcass weight)
+    cattle_photo: Optional[str] = None
+    negotiable_date: Optional[str] = None  # Legacy field for backward compatibility
 
 class Farmer(FarmerCreate):
     id: str

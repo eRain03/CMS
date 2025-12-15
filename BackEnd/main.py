@@ -139,6 +139,10 @@ class Proposal(BaseModel):
     supply_id: str
     price_offer: float
     message: Optional[str] = ""
+    # New fields for enhanced proposals
+    loading_date: Optional[str] = None  # ISO date string
+    conditions: Optional[str] = None    # Specific conditions for the purchase
+    price_per_unit: Optional[float] = None  # Price per arroba (@) for live weight transactions
 
 class CustomCity(BaseModel):
     state: str
@@ -257,6 +261,9 @@ def create_proposal(prop: Proposal, user: str = Depends(get_current_user)):
         "buyer_contact": u_data.get('phone', 'Unknown'),
         "price_offer": prop.price_offer,
         "message": prop.message,
+        "loading_date": prop.loading_date,
+        "conditions": prop.conditions,
+        "price_per_unit": prop.price_per_unit,
         "status": "PENDING",
         "timestamp": time.time()
     }
@@ -271,34 +278,71 @@ def create_proposal(prop: Proposal, user: str = Depends(get_current_user)):
 @app.get("/api/my-proposals")
 def get_received_proposals(user: str = Depends(get_current_user)):
     # 我是 Farmer，查看发给我的提案
-    farmers = load_json(DB_FARMERS)
-    proposals = load_json(DB_PROPOSALS)
+    try:
+        farmers = load_json(DB_FARMERS)
+        proposals = load_json(DB_PROPOSALS)
 
-    my_supply_ids = [f['id'] for f in farmers if f.get('owner_id') == user]
-    received = [p for p in proposals if p['supply_id'] in my_supply_ids]
+        my_supply_ids = [f['id'] for f in farmers if f.get('owner_id') == user]
+        received = [p for p in proposals if p.get('supply_id') in my_supply_ids]
 
-    return sorted(received, key=lambda x: x.get('timestamp', 0), reverse=True)
+        # 填充供应详情（与sent proposals一致）
+        for p in received:
+            supply = next((f for f in farmers if f['id'] == p.get('supply_id')), None)
+            if supply:
+                p['supply_detail'] = {
+                    "race": supply.get('race'),
+                    "qty": supply.get('quantity'),
+                    "quantity": supply.get('quantity'),
+                    "location": f"{supply.get('city')}, {supply.get('state')}",
+                    "city": supply.get('city'),
+                    "state": supply.get('state'),
+                    "photo": supply.get('cattle_photo'),
+                    "age": supply.get('age'),
+                    "weight": supply.get('estimated_weight'),
+                    "weight_type": supply.get('weight_type', 'live'),
+                    "category": supply.get('category')
+                }
+
+        result = sorted(received, key=lambda x: x.get('timestamp', 0), reverse=True)
+        return result if isinstance(result, list) else []
+    except Exception as e:
+        logger.error(f"Error in get_received_proposals: {str(e)}")
+        return []
 
 @app.get("/api/my-sent-proposals")
 def get_sent_proposals(user: str = Depends(get_current_user)):
     # 我是 Buyer，查看我发出的
-    proposals = load_json(DB_PROPOSALS)
-    farmers = load_json(DB_FARMERS)
+    try:
+        proposals = load_json(DB_PROPOSALS)
+        farmers = load_json(DB_FARMERS)
 
-    sent = [p for p in proposals if p['buyer_id'] == user]
+        sent = [p for p in proposals if p.get('buyer_id') == user]
 
-    # 填充详情
-    for p in sent:
-        supply = next((f for f in farmers if f['id'] == p['supply_id']), None)
-        if supply:
-            p['supply_detail'] = {
-                "race": supply.get('race'),
-                "qty": supply.get('quantity'),
-                "location": f"{supply.get('city')}, {supply.get('state')}",
-                "photo": supply.get('cattle_photo')
-            }
+        # 填充详情
+        for p in sent:
+            supply = next((f for f in farmers if f['id'] == p.get('supply_id')), None)
+            if supply:
+                p['supply_detail'] = {
+                    "race": supply.get('race'),
+                    "qty": supply.get('quantity'),
+                    "quantity": supply.get('quantity'),
+                    "location": f"{supply.get('city')}, {supply.get('state')}",
+                    "city": supply.get('city'),
+                    "state": supply.get('state'),
+                    "photo": supply.get('cattle_photo'),
+                    "age": supply.get('age'),
+                    "weight": supply.get('estimated_weight'),
+                    "weight_type": supply.get('weight_type', 'live'),
+                    "category": supply.get('category'),
+                    "nfe_file": supply.get('nfe_file'),
+                    "gta_file": supply.get('gta_file')
+                }
 
-    return sorted(sent, key=lambda x: x.get('timestamp', 0), reverse=True)
+        result = sorted(sent, key=lambda x: x.get('timestamp', 0), reverse=True)
+        return result if isinstance(result, list) else []
+    except Exception as e:
+        logger.error(f"Error in get_sent_proposals: {str(e)}")
+        return []
 
 @app.post("/api/proposals/{pid}/{action}")
 def handle_proposal(pid: str, action: str, user: str = Depends(get_current_user)):
@@ -306,30 +350,43 @@ def handle_proposal(pid: str, action: str, user: str = Depends(get_current_user)
     prop = next((p for p in proposals if p['id'] == pid), None)
     if not prop: raise HTTPException(404, "Not found")
 
+    # 验证权限：只有卖家可以接受/拒绝提案
+    farmers = load_json(DB_FARMERS)
+    supply = next((f for f in farmers if f['id'] == prop['supply_id']), None)
+    if not supply:
+        raise HTTPException(404, "Supply not found")
+    
+    # 只有卖家（supply的owner）可以接受或拒绝
+    if supply.get('owner_id') != user:
+        raise HTTPException(403, "Only the seller can accept or reject proposals")
+
     if action == 'reject':
         prop['status'] = 'REJECTED'
     elif action == 'accept':
+        # 检查提案是否已经被接受
+        if prop.get('status') != 'PENDING':
+            raise HTTPException(400, "Proposal is not in PENDING status")
+        
         prop['status'] = 'ACCEPTED'
         # 锁定 Supply
-        farmers = load_json(DB_FARMERS)
-        supply = next((f for f in farmers if f['id'] == prop['supply_id']), None)
-        if supply:
-            supply['status'] = 'AWAITING_PAYMENT'
-            supply['buyer_id'] = prop['buyer_id']
-            save_json(DB_FARMERS, farmers) # 保存状态
+        supply['status'] = 'AWAITING_PAYMENT'
+        supply['buyer_id'] = prop['buyer_id']
+        save_json(DB_FARMERS, farmers) # 保存状态
 
-            # 通知买家
-            save_notification(prop['buyer_id'], "Offer Accepted! Pay fee to lock.", prop)
+        # 通知买家
+        save_notification(prop['buyer_id'], "Offer Accepted! Pay reservation deposit to lock the deal.", prop)
 
     save_json(DB_PROPOSALS, proposals)
     return {"msg": "Updated"}
 
 @app.post("/api/pay-reservation/{pid}")
 def pay_fee(pid: str, user: str = Depends(get_current_user)):
+    """Simulated reservation deposit payment"""
     proposals = load_json(DB_PROPOSALS)
     prop = next((p for p in proposals if p['id'] == pid), None)
 
     if not prop or prop['buyer_id'] != user: raise HTTPException(403)
+    if prop.get('status') != 'ACCEPTED': raise HTTPException(400, "Proposal must be accepted first")
 
     farmers = load_json(DB_FARMERS)
     supply = next((f for f in farmers if f['id'] == prop['supply_id']), None)
@@ -337,16 +394,27 @@ def pay_fee(pid: str, user: str = Depends(get_current_user)):
     if not supply: raise HTTPException(404)
 
     # 状态流转
-    supply['status'] = 'SOLD'
+    supply['status'] = 'RESERVED'  # Changed from 'SOLD' to 'RESERVED'
     prop['status'] = 'PAID'
+    prop['deposit_paid_at'] = time.time()
+    prop['deposit_amount'] = 100.0  # Simulated deposit amount
 
     save_json(DB_FARMERS, farmers)
     save_json(DB_PROPOSALS, proposals)
 
     # 通知卖家
-    save_notification(supply['owner_id'], "Deal Closed! Buyer paid fee.", prop)
+    save_notification(supply['owner_id'], "Reservation deposit received! You can now start weighing.", {
+        "listing_id": prop['supply_id'],
+        "proposal_id": pid,
+        "next_action": "Start weighing"
+    })
 
-    return {"msg": "Paid", "nfe": supply.get('nfe_file'), "gta": supply.get('gta_file')}
+    return {
+        "msg": "Deposit paid", 
+        "deposit_amount": 100.0, 
+        "status": "RESERVED",
+        "listing_id": prop['supply_id']
+    }
 
 # ==========================================
 # 8. Admin & System
@@ -453,9 +521,22 @@ class WeightEntry(BaseModel):
     total_weight: float
     timestamp: Optional[str] = None
 
+class InternalWeightRequest(BaseModel):
+    perform_weighing: bool = False
+    batch_number: Optional[int] = None
+    quantity: Optional[int] = None
+    total_weight: Optional[float] = None
+
+class SlaughterhouseWeightData(BaseModel):
+    final_weight: float
+    yield_rate: Optional[float] = 0.52
+    price_per_unit: float
+
 class FinalPayment(BaseModel):
-    nfe_document: str
-    gta_document: str
+    nfe_document: Optional[str] = None  # Can be file name or document number
+    gta_document: Optional[str] = None  # Can be file name or document number
+    nfe_file: Optional[str] = None  # Uploaded file name
+    gta_file: Optional[str] = None  # Uploaded file name
     transport_fee: Optional[float] = 0
     funrural_tax: Optional[float] = 0
     yield_rate: float = Field(ge=0.48, le=0.55, default=0.52)
@@ -476,8 +557,13 @@ def add_weight_entry(listing_id: str, weight: WeightEntry, user: str = Depends(g
     if listing.get('owner_id') != user:
         raise HTTPException(403, "Not authorized")
 
+    # 检查是否为生重模式
+    weight_type = listing.get('weight_type', 'live')
+    if weight_type != 'live':
+        raise HTTPException(400, "This listing is for dead weight. Use internal weight endpoint for reference only.")
+
     # 确保列表支持称重（已接受提案且支付定金）
-    if listing.get('status') not in ['SOLD', 'AWAITING_PAYMENT']:
+    if listing.get('status') not in ['RESERVED', 'SOLD', 'AWAITING_PAYMENT']:
         raise HTTPException(400, "Listing must be reserved first")
 
     # 创建 weights 数据文件路径
@@ -534,20 +620,52 @@ def get_weights(listing_id: str, user: str = Depends(get_current_user)):
 # ==========================================
 
 @app.post("/api/listings/{listing_id}/internal-weight")
-def record_internal_weight(listing_id: str, estimated_weight: float, user: str = Depends(get_current_user)):
-    """死重模式 - 农场主内部称重（仅供参考）"""
+def record_internal_weight(listing_id: str, weight_data: InternalWeightRequest, user: str = Depends(get_current_user)):
+    """死重模式 - 农场主内部称重（可选，仅供参考）"""
     farmers = load_json(DB_FARMERS)
     listing = next((f for f in farmers if f['id'] == listing_id), None)
 
     if not listing or listing.get('owner_id') != user:
         raise HTTPException(403, "Not authorized")
 
-    listing['internal_estimated_weight'] = estimated_weight
-    listing['internal_weight_recorded_at'] = time.time()
+    weight_type = listing.get('weight_type', 'live')
+    if weight_type != 'dead':
+        raise HTTPException(400, "Internal weight is only for dead weight transactions")
+
+    # 如果提供了称重数据，记录它（用于内部跟踪）
+    if weight_data.perform_weighing:
+        if not weight_data.quantity or not weight_data.total_weight:
+            raise HTTPException(400, "quantity and total_weight are required when perform_weighing is true")
+        
+        # 使用与生重相同的称重格式
+        DB_WEIGHTS = os.path.join(BASE_DIR, "weights.json")
+        weights = load_json(DB_WEIGHTS)
+        
+        # 记录内部称重（标记为内部使用）
+        weight_entry = {
+            "listing_id": listing_id,
+            "batch_number": weight_data.batch_number or 1,
+            "quantity": weight_data.quantity,
+            "total_weight": weight_data.total_weight,
+            "is_internal": True,  # 标记为内部称重
+            "timestamp": datetime.now().isoformat()
+        }
+        weights.append(weight_entry)
+        save_json(DB_WEIGHTS, weights)
+        
+        listing['internal_weight_recorded'] = True
+        listing['internal_weight_recorded_at'] = time.time()
+    else:
+        # 不进行称重，直接标记为可运输
+        listing['internal_weight_skipped'] = True
+        listing['internal_weight_skipped_at'] = time.time()
 
     save_json(DB_FARMERS, farmers)
 
-    return {"message": "Internal weight recorded (for reference only)"}
+    return {
+        "message": "Internal weight process completed",
+        "weighed": weight_data.perform_weighing
+    }
 
 # ==========================================
 # 死重模式 - 请求预付款
@@ -604,58 +722,77 @@ def finalize_transaction(listing_id: str, payment: FinalPayment, user: str = Dep
         "id": str(uuid.uuid4()),
         "listing_id": listing_id,
         "proposal_id": proposal['id'],
-        "nfe_document": payment.nfe_document,
-        "gta_document": payment.gta_document,
+        "nfe_document": payment.nfe_document or payment.nfe_file,
+        "gta_document": payment.gta_document or payment.gta_file,
+        "nfe_file": payment.nfe_file,
+        "gta_file": payment.gta_file,
         "transport_fee": payment.transport_fee,
         "funrural_tax": payment.funrural_tax,
         "timestamp": time.time()
     }
 
+    # 判断是生重还是死重模式
+    weight_type = listing.get('weight_type', 'live')
+    
     # 计算金额（生重模式）
     DB_WEIGHTS = os.path.join(BASE_DIR, "weights.json")
     weights = load_json(DB_WEIGHTS)
     listing_weights = [w for w in weights if w['listing_id'] == listing_id]
 
-    if listing_weights:
+    if weight_type == 'live' and listing_weights:
+        # 生重模式：基于实际称重计算
         total_weight = sum(w['total_weight'] for w in listing_weights)
-        at_quantity = total_weight / 15
-        final_amount = at_quantity * payment.yield_rate * proposal['price_offer']
+        at_quantity = total_weight / 15  # 转换为 @ (arroba)
+        # 使用 price_per_unit 如果可用，否则使用 price_offer
+        price_per_arroba = proposal.get('price_per_unit') or (proposal['price_offer'] / (listing.get('quantity', 1) * listing.get('estimated_weight', 1) / 15))
+        final_amount = at_quantity * payment.yield_rate * price_per_arroba
 
         transaction.update({
+            "weight_type": "live",
             "total_weight": total_weight,
             "at_quantity": round(at_quantity, 2),
             "yield_rate": payment.yield_rate,
-            "price_per_unit": proposal['price_offer'],
+            "price_per_unit": price_per_arroba,
             "gross_amount": round(final_amount, 2),
             "final_amount": round(final_amount - payment.transport_fee - payment.funrural_tax, 2),
-            "status": "completed"
+            "status": "awaiting_final_payment",  # 改为等待尾款支付
+            "deposit_amount": proposal.get('deposit_amount', 0)  # 记录押金金额
         })
-    else:
+    elif weight_type == 'dead':
         # 死重模式 - 等待屠宰场称重
         transaction.update({
+            "weight_type": "dead",
             "status": "awaiting_slaughterhouse_weight",
-            "note": "Waiting for slaughterhouse weighing"
+            "note": "Waiting for slaughterhouse weighing after slaughter"
+        })
+    else:
+        # 没有称重记录但标记为生重模式
+        transaction.update({
+            "status": "awaiting_weighing",
+            "note": "Waiting for weight confirmation"
         })
 
     transactions.append(transaction)
     save_json(DB_TRANSACTIONS, transactions)
 
     # 更新列表状态
-    listing['status'] = 'COMPLETED'
+    listing['status'] = 'AWAITING_FINAL_PAYMENT'  # 等待尾款支付
     listing['transaction_id'] = transaction['id']
     save_json(DB_FARMERS, farmers)
 
-    # 通知买家
-    save_notification(listing.get('buyer_id'), f"Transaction completed - Listing #{listing_id}", transaction)
-
-    # 模拟退定金通知
-    save_notification(listing.get('buyer_id'), f"Deposit refunded - Listing #{listing_id}", {
-        "transaction_id": transaction['id']
+    # 通知买家需要支付尾款
+    save_notification(listing.get('buyer_id'), f"Final payment required: R$ {transaction.get('final_amount', 0):.2f}", {
+        "transaction_id": transaction['id'],
+        "listing_id": listing_id,
+        "final_amount": transaction.get('final_amount', 0),
+        "gross_amount": transaction.get('gross_amount', 0),
+        "action": "pay_final_payment"
     })
 
     return {
-        "message": "Transaction finalized",
-        "data": transaction
+        "message": "Documents submitted. Waiting for final payment.",
+        "data": transaction,
+        "next_step": "buyer_pay_final"
     }
 
 # ==========================================
@@ -665,12 +802,10 @@ def finalize_transaction(listing_id: str, payment: FinalPayment, user: str = Dep
 @app.post("/api/transactions/{transaction_id}/slaughterhouse-weight")
 def submit_slaughterhouse_weight(
         transaction_id: str,
-        final_weight: float,
-        yield_rate: float,
-        price_per_unit: float,
+        weight_data: SlaughterhouseWeightData,
         user: str = Depends(get_current_user)
 ):
-    """屠宰场提交最终称重结果"""
+    """屠宰场提交最终称重结果（死重模式）"""
     DB_TRANSACTIONS = os.path.join(BASE_DIR, "transactions.json")
     transactions = load_json(DB_TRANSACTIONS)
 
@@ -678,28 +813,45 @@ def submit_slaughterhouse_weight(
     if not transaction:
         raise HTTPException(404, "Transaction not found")
 
-    # 计算金额
+    # 验证用户是买家
+    proposals = load_json(DB_PROPOSALS)
+    proposal = next((p for p in proposals if p['id'] == transaction['proposal_id']), None)
+    if not proposal or proposal['buyer_id'] != user:
+        raise HTTPException(403, "Only the buyer can submit slaughterhouse weight")
+
+    final_weight = weight_data.final_weight
+    yield_rate = weight_data.yield_rate or 0.52
+    price_per_unit = weight_data.price_per_unit
+
+    # 计算金额（死重：直接使用胴体重）
     at_quantity = final_weight / 15
-    final_amount = at_quantity * yield_rate * price_per_unit
+    final_amount = at_quantity * price_per_unit
 
     transaction.update({
         "slaughterhouse_weight": final_weight,
         "at_quantity": round(at_quantity, 2),
         "yield_rate": yield_rate,
         "price_per_unit": price_per_unit,
-        "final_amount": round(final_amount, 2),
+        "gross_amount": round(final_amount, 2),
+        "final_amount": round(final_amount - transaction.get('transport_fee', 0) - transaction.get('funrural_tax', 0), 2),
         "status": "completed",
-        "completed_at": time.time()
+        "completed_at": time.time(),
+        "slaughterhouse_user": user
     })
 
     save_json(DB_TRANSACTIONS, transactions)
 
-    # 通知农场主
+    # 更新列表状态
     farmers = load_json(DB_FARMERS)
     listing = next((f for f in farmers if f['id'] == transaction['listing_id']), None)
     if listing:
-        save_notification(listing['owner_id'], f"Final weighing completed", {
+        listing['status'] = 'COMPLETED'
+        save_json(DB_FARMERS, farmers)
+        
+        # 通知农场主
+        save_notification(listing['owner_id'], f"Final weighing completed by slaughterhouse", {
             "transaction_id": transaction_id,
+            "final_weight": final_weight,
             "final_amount": final_amount
         })
 
@@ -708,7 +860,8 @@ def submit_slaughterhouse_weight(
         "calculation": {
             "final_weight": final_weight,
             "at_quantity": round(at_quantity, 2),
-            "final_amount": round(final_amount, 2)
+            "gross_amount": round(final_amount, 2),
+            "final_amount": transaction['final_amount']
         }
     }
 
@@ -716,8 +869,31 @@ def submit_slaughterhouse_weight(
 # 获取交易详情
 # ==========================================
 
-@app.get("/api/transactions/{listing_id}")
-def get_transaction(listing_id: str, user: str = Depends(get_current_user)):
+@app.get("/api/transactions/by-listing/{listing_id}")
+def get_transaction_by_listing(listing_id: str, user: str = Depends(get_current_user)):
+    """通过listing_id获取交易（用于前端路由）"""
+    DB_TRANSACTIONS = os.path.join(BASE_DIR, "transactions.json")
+    transactions = load_json(DB_TRANSACTIONS)
+
+    transaction = next((t for t in transactions if t['listing_id'] == listing_id), None)
+
+    if not transaction:
+        raise HTTPException(404, "Transaction not found")
+
+    # 验证用户权限（生产者或买家）
+    farmers = load_json(DB_FARMERS)
+    listing = next((f for f in farmers if f['id'] == listing_id), None)
+    if listing:
+        proposals = load_json(DB_PROPOSALS)
+        proposal = next((p for p in proposals if p['id'] == transaction['proposal_id']), None)
+        if proposal:
+            if listing.get('owner_id') != user and proposal.get('buyer_id') != user:
+                raise HTTPException(403, "Not authorized to view this transaction")
+
+    return {"data": transaction}
+
+@app.get("/api/transactions/{transaction_id}")
+def get_transaction(transaction_id: str, user: str = Depends(get_current_user)):
     """获取交易详情"""
     DB_TRANSACTIONS = os.path.join(BASE_DIR, "transactions.json")
     transactions = load_json(DB_TRANSACTIONS)
@@ -727,4 +903,134 @@ def get_transaction(listing_id: str, user: str = Depends(get_current_user)):
     if not transaction:
         raise HTTPException(404, "Transaction not found")
 
+    # 验证用户权限（生产者或买家）
+    farmers = load_json(DB_FARMERS)
+    listing = next((f for f in farmers if f['id'] == listing_id), None)
+    if listing:
+        proposals = load_json(DB_PROPOSALS)
+        proposal = next((p for p in proposals if p['id'] == transaction['proposal_id']), None)
+        if proposal:
+            if listing.get('owner_id') != user and proposal.get('buyer_id') != user:
+                raise HTTPException(403, "Not authorized to view this transaction")
+
     return {"data": transaction}
+
+@app.post("/api/transactions/{transaction_id}/pay-final")
+def pay_final_payment(transaction_id: str, user: str = Depends(get_current_user)):
+    """买家支付尾款"""
+    DB_TRANSACTIONS = os.path.join(BASE_DIR, "transactions.json")
+    transactions = load_json(DB_TRANSACTIONS)
+
+    transaction = next((t for t in transactions if t['id'] == transaction_id), None)
+    if not transaction:
+        raise HTTPException(404, "Transaction not found")
+
+    # 验证用户是买家
+    proposals = load_json(DB_PROPOSALS)
+    proposal = next((p for p in proposals if p['id'] == transaction['proposal_id']), None)
+    if not proposal or proposal['buyer_id'] != user:
+        raise HTTPException(403, "Only the buyer can pay final payment")
+
+    # 检查交易状态
+    if transaction.get('status') != 'awaiting_final_payment':
+        raise HTTPException(400, f"Transaction is not awaiting final payment. Current status: {transaction.get('status')}")
+
+    # 更新交易状态
+    transaction['status'] = 'final_payment_paid'
+    transaction['final_payment_paid_at'] = time.time()
+    transaction['final_payment_paid_by'] = user
+    save_json(DB_TRANSACTIONS, transactions)
+
+    # 更新列表状态
+    farmers = load_json(DB_FARMERS)
+    listing = next((f for f in farmers if f['id'] == transaction['listing_id']), None)
+    if listing:
+        listing['status'] = 'FINAL_PAYMENT_PAID'
+        save_json(DB_FARMERS, farmers)
+
+        # 通知卖家
+        save_notification(listing['owner_id'], f"Final payment received: R$ {transaction.get('final_amount', 0):.2f}. Please confirm receipt.", {
+            "transaction_id": transaction_id,
+            "final_amount": transaction.get('final_amount', 0),
+            "action": "confirm_payment"
+        })
+
+    return {
+        "message": "Final payment processed",
+        "transaction_id": transaction_id,
+        "final_amount": transaction.get('final_amount', 0),
+        "next_step": "seller_confirm"
+    }
+
+@app.post("/api/transactions/{transaction_id}/confirm-payment")
+def confirm_payment_receipt(transaction_id: str, user: str = Depends(get_current_user)):
+    """生产者确认收到付款，触发押金退款"""
+    DB_TRANSACTIONS = os.path.join(BASE_DIR, "transactions.json")
+    transactions = load_json(DB_TRANSACTIONS)
+
+    transaction = next((t for t in transactions if t['id'] == transaction_id), None)
+    if not transaction:
+        raise HTTPException(404, "Transaction not found")
+
+    # 验证用户是生产者
+    farmers = load_json(DB_FARMERS)
+    listing = next((f for f in farmers if f['id'] == transaction['listing_id']), None)
+    if not listing or listing.get('owner_id') != user:
+        raise HTTPException(403, "Only the producer can confirm payment receipt")
+
+    # 检查交易状态
+    if transaction.get('status') != 'final_payment_paid':
+        raise HTTPException(400, f"Transaction final payment must be paid first. Current status: {transaction.get('status')}")
+
+    # 处理押金退款
+    proposals = load_json(DB_PROPOSALS)
+    proposal = next((p for p in proposals if p['id'] == transaction['proposal_id']), None)
+    
+    if proposal and proposal.get('deposit_amount') and not proposal.get('deposit_refunded'):
+        proposal['deposit_refunded'] = True
+        proposal['deposit_refunded_at'] = time.time()
+        proposal['payment_confirmed_by'] = user
+        proposal['payment_confirmed_at'] = time.time()
+        save_json(DB_PROPOSALS, proposals)
+
+        # 通知买家押金已退还
+        save_notification(proposal['buyer_id'], f"Reservation deposit refunded: R$ {proposal.get('deposit_amount', 0):.2f}", {
+            "transaction_id": transaction_id,
+            "refund_amount": proposal.get('deposit_amount', 0)
+        })
+
+        transaction['payment_confirmed'] = True
+        transaction['payment_confirmed_at'] = time.time()
+        transaction['status'] = 'completed'
+        save_json(DB_TRANSACTIONS, transactions)
+
+        # 更新列表状态为完成
+        farmers = load_json(DB_FARMERS)
+        listing = next((f for f in farmers if f['id'] == transaction['listing_id']), None)
+        if listing:
+            listing['status'] = 'COMPLETED'
+            save_json(DB_FARMERS, farmers)
+
+        return {
+            "message": "Payment confirmed and deposit refunded. Transaction completed.",
+            "refund_amount": proposal.get('deposit_amount', 0),
+            "status": "completed"
+        }
+    else:
+        # 即使没有押金，也要标记为完成
+        transaction['payment_confirmed'] = True
+        transaction['payment_confirmed_at'] = time.time()
+        transaction['status'] = 'completed'
+        save_json(DB_TRANSACTIONS, transactions)
+
+        farmers = load_json(DB_FARMERS)
+        listing = next((f for f in farmers if f['id'] == transaction['listing_id']), None)
+        if listing:
+            listing['status'] = 'COMPLETED'
+            save_json(DB_FARMERS, farmers)
+
+        return {
+            "message": "Payment confirmed. Transaction completed.",
+            "refund_amount": 0,
+            "status": "completed"
+        }

@@ -18,7 +18,10 @@ const showOfferModal = ref(false)
 const targetItem = ref(null)
 const offerForm = reactive({
   price: null,
-  message: ''
+  price_per_unit: null,  // Price per arroba (@) for live weight
+  message: '',
+  loading_date: '',
+  conditions: ''
 })
 const sendingOffer = ref(false)
 
@@ -69,7 +72,10 @@ const openOfferModal = (item) => {
 
   targetItem.value = item
   offerForm.price = null
+  offerForm.price_per_unit = null
   offerForm.message = `I am interested in your ${item.quantity}x ${item.race}.`
+  offerForm.loading_date = ''
+  offerForm.conditions = ''
   showOfferModal.value = true
 }
 
@@ -84,7 +90,10 @@ const submitOffer = async () => {
     const payload = {
       supply_id: targetItem.value.id,
       price_offer: parseFloat(offerForm.price),
-      message: offerForm.message
+      price_per_unit: offerForm.price_per_unit ? parseFloat(offerForm.price_per_unit) : null,
+      message: offerForm.message,
+      loading_date: offerForm.loading_date || null,
+      conditions: offerForm.conditions || null
     }
 
     const res = await fetch(`${API_BASE}/api/proposals`, {
@@ -212,6 +221,30 @@ onMounted(loadMarket)
               required
               step="0.01"
             />
+          </div>
+
+          <div class="form-group" v-if="targetItem?.weight_type === 'live'">
+            <label>Price per Arroba (@) - Optional</label>
+            <input
+              type="number"
+              v-model.number="offerForm.price_per_unit"
+              placeholder="e.g. 300.00"
+              step="0.01"
+            />
+            <small class="hint">For live weight transactions. If not provided, will be calculated.</small>
+          </div>
+
+          <div class="form-group">
+            <label>Loading Date</label>
+            <input
+              type="date"
+              v-model="offerForm.loading_date"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Specific Conditions</label>
+            <textarea v-model="offerForm.conditions" rows="2" placeholder="Any specific conditions or requirements..."></textarea>
           </div>
 
           <div class="form-group">

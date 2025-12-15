@@ -12,13 +12,17 @@ const proposal = ref(null)
 const weights = ref([])
 const loading = ref(false)
 const submitting = ref(false)
+const uploading = ref(false)
+const weightType = ref('live')
 
 const formData = ref({
   yield_rate: 0.52,
   transport_fee: 0,
   funrural_tax: 0,
   nfe_document: '',
-  gta_document: ''
+  gta_document: '',
+  nfe_file: null,  // File object
+  gta_file: null   // File object
 })
 
 onMounted(async () => {
@@ -36,6 +40,9 @@ const loadData = async () => {
     })
     const dataListings = await resListings.json()
     listing.value = dataListings.supply.find(l => l.id === listingId)
+    if (listing.value) {
+      weightType.value = listing.value.weight_type || 'live'
+    }
 
     // 加载称重记录
     const resWeights = await fetch(`${API_BASE}/api/listings/${listingId}/weights`, {
@@ -81,36 +88,89 @@ const autoCalculateFunrural = () => {
   formData.value.funrural_tax = grossAmount.value * 0.002
 }
 
+// 文件上传处理
+const handleFileUpload = (event, type) => {
+  const file = event.target.files[0]
+  if (file) {
+    formData.value[type] = file
+  }
+}
+
+// 上传文件到服务器
+const uploadFile = async (fileObj) => {
+  if (!fileObj) return null
+  const fd = new FormData()
+  fd.append('file', fileObj)
+  const token = localStorage.getItem('token')
+  const res = await fetch(`${API_BASE}/api/upload`, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${token}` },
+    body: fd
+  })
+  if (!res.ok) throw new Error('File upload failed')
+  const data = await res.json()
+  return data.filename
+}
+
 // 提交
 const handleSubmit = async () => {
-  if (!formData.value.nfe_document || !formData.value.gta_document) {
-    alert('Please provide NFe and GTA documents')
+  if (!formData.value.nfe_document && !formData.value.nfe_file) {
+    alert('Please provide NFe document (number or file)')
+    return
+  }
+  if (!formData.value.gta_document && !formData.value.gta_file) {
+    alert('Please provide GTA document (number or file)')
     return
   }
 
   submitting.value = true
+  uploading.value = true
   const token = localStorage.getItem('token')
 
   try {
+    // 上传文件（如果有）
+    const [nfeFileName, gtaFileName] = await Promise.all([
+      formData.value.nfe_file ? uploadFile(formData.value.nfe_file) : Promise.resolve(null),
+      formData.value.gta_file ? uploadFile(formData.value.gta_file) : Promise.resolve(null)
+    ])
+
+    // 准备提交数据
+    const payload = {
+      ...formData.value,
+      nfe_file: nfeFileName,
+      gta_file: gtaFileName,
+      nfe_document: formData.value.nfe_document || nfeFileName,
+      gta_document: formData.value.gta_document || gtaFileName
+    }
+    delete payload.nfe_file  // Remove file objects
+    delete payload.gta_file
+
     const res = await fetch(`${API_BASE}/api/listings/${listingId}/finalize`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify(formData.value)
+      body: JSON.stringify(payload)
     })
 
-    if (!res.ok) throw new Error('提交失败')
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}))
+      throw new Error(err.detail || '提交失败')
+    }
 
-    alert('✅ Transaction finalized! Deposit will be refunded.')
+    const result = await res.json()
+    alert('✅ Documents submitted successfully!\n\nNext: Buyer needs to pay the final amount of R$ ' + 
+          (result.data?.final_amount || 0).toFixed(2) + 
+          '\n\nYou will be notified when payment is received.')
     router.push('/')
 
   } catch (error) {
     console.error('提交失败:', error)
-    alert('提交失败,请重试')
+    alert('提交失败: ' + error.message)
   } finally {
     submitting.value = false
+    uploading.value = false
   }
 }
 </script>
@@ -222,23 +282,57 @@ const handleSubmit = async () => {
           </div>
 
           <div class="form-group">
-            <label>NFe Invoice Number *</label>
-            <input
-              type="text"
-              v-model="formData.nfe_document"
-              placeholder="NFe-123456789"
-              required
-            />
+            <label>NFe Invoice *</label>
+            <div class="file-upload-section">
+              <input
+                type="text"
+                v-model="formData.nfe_document"
+                placeholder="NFe-123456789 (or upload file)"
+                :required="!formData.nfe_file"
+              />
+              <div class="file-upload-wrapper">
+                <label class="file-upload-label">
+                  <input
+                    type="file"
+                    @change="handleFileUpload($event, 'nfe_file')"
+                    accept=".pdf,image/*"
+                    style="display: none"
+                  />
+                  📄 Upload NFe File
+                </label>
+                <span v-if="formData.nfe_file" class="file-name">{{ formData.nfe_file.name }}</span>
+              </div>
+            </div>
+            <small class="hint">Provide either document number or upload file (or both)</small>
           </div>
 
           <div class="form-group">
-            <label>GTA Document Number *</label>
-            <input
-              type="text"
-              v-model="formData.gta_document"
-              placeholder="GTA-987654321"
-              required
-            />
+            <label>GTA Document *</label>
+            <div class="file-upload-section">
+              <input
+                type="text"
+                v-model="formData.gta_document"
+                placeholder="GTA-987654321 (or upload file)"
+                :required="!formData.gta_file"
+              />
+              <div class="file-upload-wrapper">
+                <label class="file-upload-label">
+                  <input
+                    type="file"
+                    @change="handleFileUpload($event, 'gta_file')"
+                    accept=".pdf,image/*"
+                    style="display: none"
+                  />
+                  📄 Upload GTA File
+                </label>
+                <span v-if="formData.gta_file" class="file-name">{{ formData.gta_file.name }}</span>
+              </div>
+            </div>
+            <small class="hint">Provide either document number or upload file (or both)</small>
+          </div>
+
+          <div v-if="weightType === 'dead'" class="alert-box info">
+            <p>ℹ️ <strong>Dead Weight Transaction:</strong> The final value will be calculated by the slaughterhouse after slaughter. You must still provide NF-e and GTA documents for transport.</p>
           </div>
 
           <div class="alert-box">
@@ -249,9 +343,9 @@ const handleSubmit = async () => {
           <button
             type="submit"
             class="btn-submit"
-            :disabled="submitting"
+            :disabled="submitting || uploading"
           >
-            {{ submitting ? 'Processing...' : '✅ Finalize Transaction' }}
+            {{ uploading ? 'Uploading files...' : submitting ? 'Processing...' : '✅ Finalize Transaction' }}
           </button>
         </form>
       </template>
@@ -300,6 +394,14 @@ input:focus { border-color: #2c3e50; outline: none; }
 
 .alert-box { background: #fff3e0; border: 1px solid #ffb74d; border-radius: 8px; padding: 15px; margin-bottom: 25px; }
 .alert-box p { margin: 5px 0; font-size: 0.9rem; color: #e65100; }
+.alert-box.info { background: #e3f2fd; border-color: #64b5f6; }
+.alert-box.info p { color: #1565c0; }
+
+.file-upload-section { display: flex; flex-direction: column; gap: 10px; }
+.file-upload-wrapper { display: flex; align-items: center; gap: 10px; }
+.file-upload-label { padding: 8px 15px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; font-size: 0.9rem; color: #555; transition: background 0.2s; }
+.file-upload-label:hover { background: #e0e0e0; }
+.file-name { font-size: 0.85rem; color: #27ae60; font-weight: 500; }
 
 .btn-submit { width: 100%; padding: 16px; background: #27ae60; color: white; border: none; border-radius: 6px; font-size: 1.1rem; cursor: pointer; font-weight: 600; transition: background 0.2s; }
 .btn-submit:hover:not(:disabled) { background: #219150; }
