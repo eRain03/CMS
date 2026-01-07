@@ -160,9 +160,7 @@ const handleSubmit = async () => {
     }
 
     const result = await res.json()
-    alert('✅ Documents submitted successfully!\n\nNext: Buyer needs to pay the final amount of R$ ' + 
-          (result.data?.final_amount || 0).toFixed(2) + 
-          '\n\nYou will be notified when payment is received.')
+    alert('✅ Documents submitted. Final amount calculated.\n\nNext: Buyer must pay final amount. We will notify them now.')
     router.push('/')
 
   } catch (error) {

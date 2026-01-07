@@ -8,7 +8,7 @@ const activeTab = ref('negotiations') // 默认优先显示交易动态
 const notifications = ref([])
 const myListings = ref({ supply: [], demand: [] })
 
-// 存储提案数据 - 确保初始化为对象
+// 存储提案数据
 const myProposals = ref({ sent: [], received: [] })
 const loading = ref(false)
 const expandedNotif = ref(null)
@@ -24,21 +24,16 @@ const currentPaymentProp = ref(null)
 // ✅ 新增：详情弹窗控制状态
 const showDetailModal = ref(false)
 const selectedProposal = ref(null)
+const selectedTransaction = ref(null)
+const userRole = ref(localStorage.getItem('role') || '')
+const transactionStatus = computed(() => selectedTransaction.value?.data?.status || null)
+const transactionFinalAmount = computed(() => selectedTransaction.value?.data?.final_amount || 0)
 
 const API_BASE = 'http://43.248.188.75:38939'
 
 // 计算未读消息
 const unreadCount = computed(() => {
   return notifications.value.filter(n => !unlockedSet.has(n.timestamp)).length
-})
-
-// 计算提案数据，确保响应式
-const receivedProposals = computed(() => {
-  return Array.isArray(myProposals.value?.received) ? myProposals.value.received : []
-})
-
-const sentProposals = computed(() => {
-  return Array.isArray(myProposals.value?.sent) ? myProposals.value.sent : []
 })
 
 onMounted(async () => {
@@ -51,17 +46,6 @@ onMounted(async () => {
 
 const loadDashboard = async (token) => {
   loading.value = true
-  // 确保 myProposals 对象始终存在
-  if (!myProposals.value) {
-    myProposals.value = { received: [], sent: [] }
-  }
-  if (!myProposals.value.received) {
-    myProposals.value.received = []
-  }
-  if (!myProposals.value.sent) {
-    myProposals.value.sent = []
-  }
-  
   try {
     const headers = { 'Authorization': `Bearer ${token}` }
 
@@ -77,158 +61,36 @@ const loadDashboard = async (token) => {
 
     notifications.value = await resNotif.json()
     myListings.value = await resListings.json()
-    
-    // 检查API响应状态并处理数据
-    try {
-      if (!resReceived.ok) {
-        const errorText = await resReceived.text()
-        console.error('Failed to load received proposals:', resReceived.status, errorText)
-        myProposals.value.received = []
-      } else {
-        const data = await resReceived.json()
-        myProposals.value.received = Array.isArray(data) ? data : []
-        console.log('Loaded received proposals:', myProposals.value.received.length)
-      }
-    } catch (e) {
-      console.error('Error parsing received proposals:', e)
-      myProposals.value.received = []
-    }
-    
-    try {
-      if (!resSent.ok) {
-        const errorText = await resSent.text()
-        console.error('Failed to load sent proposals:', resSent.status, errorText)
-        myProposals.value.sent = []
-      } else {
-        const data = await resSent.json()
-        myProposals.value.sent = Array.isArray(data) ? data : []
-        console.log('Loaded sent proposals:', myProposals.value.sent.length)
-      }
-    } catch (e) {
-      console.error('Error parsing sent proposals:', e)
-      myProposals.value.sent = []
-    }
-
-    // 确保数据不为undefined
-    if (!Array.isArray(myProposals.value.received)) {
-      myProposals.value.received = []
-    }
-    if (!Array.isArray(myProposals.value.sent)) {
-      myProposals.value.sent = []
-    }
-
-    // 加载待处理的交易
-    await loadPendingTransactions(token)
+    myProposals.value.received = await resReceived.json()
+    myProposals.value.sent = await resSent.json()
 
   } catch (e) {
-    console.error('Error loading dashboard:', e)
-    // 确保即使出错也有默认值
-    if (!myProposals.value) {
-      myProposals.value = { received: [], sent: [] }
-    }
-    if (!Array.isArray(myProposals.value.received)) {
-      myProposals.value.received = []
-    }
-    if (!Array.isArray(myProposals.value.sent)) {
-      myProposals.value.sent = []
-    }
+    console.error(e)
   } finally {
     loading.value = false
   }
 }
 
-// 加载待处理的交易
-const loadPendingTransactions = async (token) => {
-  try {
-    const headers = { 'Authorization': `Bearer ${token}` }
-    const transactions = []
-    
-    // 确保 myListings.value.supply 是数组
-    const listings = Array.isArray(myListings.value?.supply) ? myListings.value.supply : []
-    
-    // 检查所有listings的交易状态（卖家端）
-    for (const listing of listings) {
-      if (listing.transaction_id || ['AWAITING_FINAL_PAYMENT', 'FINAL_PAYMENT_PAID'].includes(listing.status)) {
-        try {
-          const res = await fetch(`${API_BASE}/api/transactions/by-listing/${listing.id}`, { headers })
-          if (res.ok) {
-            const data = await res.json()
-            transactions.push({ ...data.data, listing })
-          }
-        } catch (e) {
-          console.error('Failed to load transaction for listing', listing.id, e)
-        }
-      }
-    }
-    
-    // 检查买家端的待支付交易 - 通过提案找到对应的listing
-    const sentProposals = Array.isArray(myProposals.value?.sent) ? myProposals.value.sent : []
-    for (const proposal of sentProposals) {
-      if (proposal.status === 'PAID') {
-        try {
-          // 直接通过API获取交易（即使listing不在我的listings中）
-          const res = await fetch(`${API_BASE}/api/transactions/by-listing/${proposal.supply_id}`, { headers })
-          if (res.ok) {
-            const data = await res.json()
-            const transaction = data.data
-            if (transaction && (transaction.status === 'awaiting_final_payment' || transaction.status === 'final_payment_paid')) {
-              // 尝试获取listing信息
-              let listing = listings.find(l => l.id === proposal.supply_id)
-              if (!listing) {
-                // 如果不在我的listings中，使用proposal中的supply_detail信息
-                listing = {
-                  id: proposal.supply_id,
-                  race: proposal.supply_detail?.race || 'Unknown',
-                  quantity: proposal.supply_detail?.quantity || proposal.supply_detail?.qty || 0
-                }
-              }
-              transactions.push({ ...transaction, listing, proposal })
-            }
-          }
-        } catch (e) {
-          // 忽略错误，可能交易还不存在或listing不属于当前用户
-        }
-      }
-    }
-    
-    pendingTransactions.value = transactions
-  } catch (e) {
-    console.error('Failed to load pending transactions', e)
-  }
-}
-
-// 跳转到尾款支付
-const goToFinalPayment = (transactionId) => {
-  router.push(`/payment/${transactionId}`)
-}
-
-// 确认收款
-const confirmPaymentReceipt = async (transactionId) => {
-  if (!confirm('确认已收到尾款？确认后将完成交易并退还押金。')) return
-  
+// ✅ 新增：打开详情弹窗的方法
+const loadTransactionForProposal = async (proposal) => {
+  selectedTransaction.value = null
   const token = localStorage.getItem('token')
+  if (!proposal?.supply_id) return
   try {
-    const res = await fetch(`${API_BASE}/api/transactions/${transactionId}/confirm-payment`, {
-      method: 'POST',
+    const res = await fetch(`${API_BASE}/api/transactions/by-listing/${proposal.supply_id}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
-    
     if (res.ok) {
-      const result = await res.json()
-      alert('✅ 收款确认成功！交易已完成，押金已退还。')
-      loadDashboard(token)
-    } else {
-      const err = await res.json()
-      alert('确认失败: ' + err.detail)
+      selectedTransaction.value = await res.json()
     }
   } catch (e) {
-    alert('操作失败: ' + e.message)
+    console.warn('No transaction yet for listing', proposal.supply_id)
   }
 }
 
-// ✅ 新增：打开详情弹窗的方法
-const openProposalDetails = (proposal) => {
+const openProposalDetails = async (proposal) => {
   selectedProposal.value = proposal
+  await loadTransactionForProposal(proposal)
   showDetailModal.value = true
 }
 
@@ -290,6 +152,57 @@ const processPayment = async () => {
     alert('Network Error during payment')
   } finally {
     paying.value = false
+  }
+}
+
+// 买家支付尾款
+const payFinalPayment = async () => {
+  const tx = selectedTransaction.value?.data
+  if (!tx) return alert('No transaction found for this listing yet.')
+  if (tx.status !== 'awaiting_final_payment') return alert(`Transaction status is ${tx.status}, cannot pay final amount.`)
+
+  const token = localStorage.getItem('token')
+  try {
+    const res = await fetch(`${API_BASE}/api/transactions/${tx.id}/pay-final`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+    if (res.ok) {
+      const data = await res.json()
+      alert('✅ Final payment sent. Waiting for seller confirmation.')
+      await loadDashboard(token)
+      await loadTransactionForProposal(selectedProposal.value)
+    } else {
+      const err = await res.json()
+      alert(err.detail || 'Payment failed')
+    }
+  } catch (e) {
+    alert('Network Error during final payment')
+  }
+}
+
+// 卖家确认收款并退押金
+const confirmPaymentReceipt = async () => {
+  const tx = selectedTransaction.value?.data
+  if (!tx) return alert('No transaction found for this listing yet.')
+  if (!confirm('确认已收到尾款？确认后将完成交易并退还押金。')) return
+
+  const token = localStorage.getItem('token')
+  try {
+    const res = await fetch(`${API_BASE}/api/transactions/${tx.id}/confirm-payment`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+    if (res.ok) {
+      alert('✅ 收款确认成功！交易已完成，押金已退还。')
+      await loadDashboard(token)
+      await loadTransactionForProposal(selectedProposal.value)
+    } else {
+      const err = await res.json()
+      alert('确认失败: ' + err.detail)
+    }
+  } catch (e) {
+    alert('操作失败: ' + e.message)
   }
 }
 
@@ -375,7 +288,7 @@ const formatTargets = (targets) => {
         </div>
         <div class="stat-item">
           <span class="stat-label">Negotiations</span>
-          <span class="stat-value">{{ (myProposals.received?.length || 0) + (myProposals.sent?.length || 0) }}</span>
+          <span class="stat-value">{{ myProposals.received.length + myProposals.sent.length }}</span>
         </div>
       </div>
 
@@ -407,111 +320,11 @@ const formatTargets = (targets) => {
 
         <div class="tab-body">
 
-          <!-- Overview Tab - 显示待处理事项 -->
-          <div v-if="activeTab === 'overview'" class="overview-section">
-            <!-- 待支付尾款（买家） -->
-            <div v-if="pendingTransactions.filter(t => t.status === 'awaiting_final_payment' && sentProposals.some(p => p.supply_id === t.listing_id && p.status === 'PAID')).length > 0">
-              <h3 class="sub-header">💰 Pending Final Payment (Action Required)</h3>
-              <div v-for="t in pendingTransactions.filter(t => t.status === 'awaiting_final_payment' && sentProposals.some(p => p.supply_id === t.listing_id && p.status === 'PAID'))" 
-                   :key="t.id" class="minimal-card action-card payment-card">
-                <div class="card-header-action">
-                  <div>
-                    <strong>Final Payment Required</strong>
-                    <p class="card-subtitle">Listing: {{ t.listing?.race }} ({{ t.listing?.quantity }} head)</p>
-                  </div>
-                  <span class="amount-badge">R$ {{ t.final_amount?.toFixed(2) || '0.00' }}</span>
-                </div>
-                <div class="card-details">
-                  <div class="detail-item">
-                    <span class="label">Total Weight:</span>
-                    <span>{{ t.total_weight?.toFixed(2) || 'N/A' }} kg</span>
-                  </div>
-                  <div class="detail-item" v-if="t.at_quantity">
-                    <span class="label">@ Quantity:</span>
-                    <span>{{ t.at_quantity.toFixed(2) }} @</span>
-                  </div>
-                </div>
-                <button class="btn-action-primary" @click="goToFinalPayment(t.id)">
-                  💳 Pay Final Amount
-                </button>
-              </div>
-            </div>
-
-            <!-- 待确认收款（卖家） -->
-            <div v-if="pendingTransactions.filter(t => t.status === 'final_payment_paid' && myListings.supply.some(l => l.id === t.listing_id)).length > 0">
-              <h3 class="sub-header">✅ Payment Received - Confirm Receipt</h3>
-              <div v-for="t in pendingTransactions.filter(t => t.status === 'final_payment_paid' && myListings.supply.some(l => l.id === t.listing_id))" 
-                   :key="t.id" class="minimal-card action-card confirm-card">
-                <div class="card-header-action">
-                  <div>
-                    <strong>Final Payment Received</strong>
-                    <p class="card-subtitle">Listing: {{ t.listing?.race }} ({{ t.listing?.quantity }} head)</p>
-                  </div>
-                  <span class="amount-badge success">R$ {{ t.final_amount?.toFixed(2) || '0.00' }}</span>
-                </div>
-                <div class="card-details">
-                  <div class="detail-item">
-                    <span class="label">Buyer:</span>
-                    <span>{{ t.proposal?.buyer_id || 'N/A' }}</span>
-                  </div>
-                  <div class="detail-item">
-                    <span class="label">Paid At:</span>
-                    <span>{{ new Date(t.final_payment_paid_at * 1000).toLocaleString() }}</span>
-                  </div>
-                </div>
-                <button class="btn-action-success" @click="confirmPaymentReceipt(t.id)">
-                  ✅ Confirm Receipt & Complete Transaction
-                </button>
-              </div>
-            </div>
-
-            <!-- 快速操作 -->
-            <div class="quick-actions">
-              <h3 class="sub-header">⚡ Quick Actions</h3>
-              <div class="actions-grid">
-                <button class="action-tile" @click="activeTab = 'negotiations'">
-                  <span class="action-icon">💬</span>
-                  <span class="action-label">View Negotiations</span>
-                </button>
-                <button class="action-tile" @click="router.push('/farmer')">
-                  <span class="action-icon">➕</span>
-                  <span class="action-label">Post New Listing</span>
-                </button>
-                <button class="action-tile" @click="router.push('/market')">
-                  <span class="action-icon">🛒</span>
-                  <span class="action-label">Browse Market</span>
-                </button>
-                <button class="action-tile" @click="activeTab = 'listings'">
-                  <span class="action-icon">📋</span>
-                  <span class="action-label">My Listings</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- 如果没有待处理事项 -->
-            <div v-if="pendingTransactions.filter(t => t.status === 'awaiting_final_payment' || t.status === 'final_payment_paid').length === 0" 
-                 class="empty-state">
-              <span class="empty-icon">✨</span>
-              <p>No pending actions. All transactions are up to date!</p>
-            </div>
-          </div>
-
           <div v-if="activeTab === 'negotiations'" class="negotiation-list">
-            <!-- Debug: Show loading or data status -->
-            <div v-if="loading" style="text-align: center; padding: 40px; color: #999;">
-              Loading negotiations...
-            </div>
 
-            <!-- Debug info -->
-            <div v-if="!loading" style="padding: 10px; background: #f0f0f0; margin-bottom: 20px; font-size: 0.8rem; color: #666;">
-              Debug: received={{ receivedProposals.length }}, sent={{ sentProposals.length }}
-              <br>
-              Raw: received={{ myProposals.received?.length || 'undefined' }}, sent={{ myProposals.sent?.length || 'undefined' }}
-            </div>
-
-            <div v-if="!loading && receivedProposals.length > 0">
+            <div v-if="myProposals.received.length > 0">
               <h3 class="sub-header">📥 Incoming Offers (You are Seller)</h3>
-              <div v-for="p in receivedProposals" :key="p.id" class="minimal-card deal-card">
+              <div v-for="p in myProposals.received" :key="p.id" class="minimal-card deal-card">
                 <div class="deal-header">
                   <span class="price-tag">R$ {{ p.price_offer.toLocaleString() }}</span>
                   <span class="status-badge" :class="p.status">{{ p.status }}</span>
@@ -533,44 +346,23 @@ const formatTargets = (targets) => {
                   <span>⏳ Accepted. Waiting for buyer payment...</span>
                 </div>
                 <div class="deal-footer success" v-if="p.status === 'PAID'">
-                  <!-- 检查listing状态 -->
-                  <template v-if="myListings.supply.find(l => l.id === p.supply_id)?.status === 'AWAITING_FINAL_PAYMENT'">
-                    <span>✅ Weighing completed! Waiting for buyer to pay final amount.</span>
-                    <div style="margin-top: 8px; font-size: 0.9rem; color: #7f8c8d;">
-                      Final amount: R$ {{ pendingTransactions.find(t => t.listing_id === p.supply_id)?.final_amount?.toFixed(2) || 'Calculating...' }}
-                    </div>
-                  </template>
-                  <template v-else-if="myListings.supply.find(l => l.id === p.supply_id)?.status === 'FINAL_PAYMENT_PAID'">
-                    <span>✅ Final payment received! Please confirm receipt.</span>
-                    <div style="margin-top: 8px;">
-                      <button 
-                        class="btn-sm" 
-                        @click.stop="confirmPaymentReceipt(pendingTransactions.find(t => t.listing_id === p.supply_id && t.status === 'final_payment_paid')?.id)"
-                        style="background: #27ae60; color: white;"
-                      >
-                        ✅ Confirm Receipt
-                      </button>
-                    </div>
-                  </template>
-                  <template v-else>
-                    <span>✅ Buyer paid reservation fee. Ready for weighing!</span>
-                    <div style="margin-top: 8px;">
-                      <button 
-                        class="btn-sm weighing-btn" 
-                        @click.stop="goToWeighing(p.supply_id)"
-                        style="background: #27ae60; color: white;"
-                      >
-                        ⚖️ Start Weighing
-                      </button>
-                    </div>
-                  </template>
+                  <span>✅ Buyer paid reservation fee. Ready for weighing!</span>
+                  <div style="margin-top: 8px;">
+                    <button 
+                      class="btn-sm weighing-btn" 
+                      @click.stop="goToWeighing(p.supply_id)"
+                      style="background: #27ae60; color: white;"
+                    >
+                      ⚖️ Start Weighing
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div v-if="sentProposals.length > 0" class="mt-40">
+            <div v-if="myProposals.sent.length > 0" class="mt-40">
               <h3 class="sub-header">📤 My Offers (You are Buyer)</h3>
-              <div v-for="p in sentProposals" :key="p.id" class="minimal-card deal-card">
+              <div v-for="p in myProposals.sent" :key="p.id" class="minimal-card deal-card">
                 <div class="deal-header">
                   <div class="supply-mini-info">
                     <span class="race">{{ p.supply_detail?.race }}</span>
@@ -594,52 +386,25 @@ const formatTargets = (targets) => {
                 </div>
 
                 <div class="deal-footer success" v-if="p.status === 'PAID'">
-                  <!-- 检查是否有待支付的尾款 -->
-                  <template v-if="pendingTransactions.find(t => t.listing_id === p.supply_id && t.status === 'awaiting_final_payment')">
-                    <span>💰 Final payment required! Weighing completed.</span>
-                    <div style="margin-top: 8px;">
-                      <button 
-                        class="btn-sm" 
-                        @click.stop="goToFinalPayment(pendingTransactions.find(t => t.listing_id === p.supply_id && t.status === 'awaiting_final_payment').id)"
-                        style="background: #f39c12; color: white;"
-                      >
-                        💳 Pay Final Amount (R$ {{ pendingTransactions.find(t => t.listing_id === p.supply_id && t.status === 'awaiting_final_payment').final_amount?.toFixed(2) }})
-                      </button>
-                    </div>
-                  </template>
-                  <template v-else-if="pendingTransactions.find(t => t.listing_id === p.supply_id && t.status === 'final_payment_paid')">
-                    <span>✅ Final payment sent. Waiting for seller confirmation.</span>
-                  </template>
-                  <template v-else>
-                    <span>✅ Deal Sealed. Waiting for seller to start weighing.</span>
-                    <div v-if="p.supply_detail" style="margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap;">
-                      <a 
-                        v-if="p.supply_detail.nfe_file || p.supply_detail.gta_file"
-                        :href="`${API_BASE}/api/files/${p.supply_detail.nfe_file || p.supply_detail.gta_file}`"
-                        target="_blank"
-                        class="btn-sm"
-                        style="background: #3498db; color: white; text-decoration: none; display: inline-block;"
-                      >
-                        📄 Download Documents
-                      </a>
-                    </div>
-                  </template>
+                  <span>✅ Deal Sealed. Waiting for seller to start weighing.</span>
+                  <div v-if="p.supply_detail" style="margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap;">
+                    <a 
+                      v-if="p.supply_detail.nfe_file || p.supply_detail.gta_file"
+                      :href="`${API_BASE}/api/files/${p.supply_detail.nfe_file || p.supply_detail.gta_file}`"
+                      target="_blank"
+                      class="btn-sm"
+                      style="background: #3498db; color: white; text-decoration: none;"
+                    >
+                      📄 Download Documents
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div v-else-if="receivedProposals.length === 0 && sentProposals.length === 0" class="empty-state">
+            <div v-if="myProposals.received.length === 0 && myProposals.sent.length === 0" class="empty-state">
               <span class="empty-icon">🤝</span>
               <p>No active negotiations yet. Go to Market to make offers.</p>
-              <p style="font-size: 0.8rem; color: #999; margin-top: 10px;">
-                Debug: received={{ receivedProposals.length }}, sent={{ sentProposals.length }}
-                <br>
-                Raw: received={{ myProposals.received?.length || 'undefined' }}, sent={{ myProposals.sent?.length || 'undefined' }}
-                <br>
-                <span v-if="receivedProposals.length === 0 && sentProposals.length === 0 && (myProposals.received?.length > 0 || myProposals.sent?.length > 0)" style="color: #e74c3c;">
-                  ⚠️ Data exists but computed values are empty. This may be a Vue reactivity issue.
-                </span>
-              </p>
             </div>
           </div>
 
@@ -844,22 +609,44 @@ const formatTargets = (targets) => {
 
         <div class="modal-footer-bar">
           <!-- 卖家操作：接受/拒绝收到的提案 -->
-          <template v-if="selectedProposal.status === 'PENDING' && receivedProposals.some(p => p.id === selectedProposal.id)">
+          <template v-if="selectedProposal.status === 'PENDING' && myProposals.received.some(p => p.id === selectedProposal.id)">
             <button class="btn-modal reject" @click="handleProposalAction(selectedProposal.id, 'reject'); showDetailModal = false">Reject Offer</button>
             <button class="btn-modal accept" @click="handleProposalAction(selectedProposal.id, 'accept'); showDetailModal = false">Accept Deal</button>
           </template>
 
           <!-- 买家操作：支付押金 -->
-          <template v-if="selectedProposal.status === 'ACCEPTED' && sentProposals.some(p => p.id === selectedProposal.id)">
+          <template v-if="selectedProposal.status === 'ACCEPTED' && myProposals.sent.some(p => p.id === selectedProposal.id)">
             <button class="btn-modal pay" @click="showDetailModal = false; openPaymentModal(selectedProposal)">Proceed to Payment</button>
           </template>
 
-          <!-- PAID状态：卖家可以开始称重 -->
-          <template v-if="selectedProposal.status === 'PAID' && receivedProposals.some(p => p.id === selectedProposal.id)">
+          <!-- PAID：卖家开始称重 -->
+          <template v-if="selectedProposal.status === 'PAID' && myProposals.received.some(p => p.id === selectedProposal.id)">
             <button class="btn-modal accept" @click="showDetailModal = false; goToWeighing(selectedProposal.supply_id)">⚖️ Start Weighing</button>
           </template>
 
-          <button class="btn-modal secondary" v-if="['PAID','REJECTED'].includes(selectedProposal.status) && !receivedProposals.some(p => p.id === selectedProposal.id && p.status === 'PAID')" @click="showDetailModal = false">Close Window</button>
+          <!-- 尾款：买家支付 -->
+          <template v-if="transactionStatus === 'awaiting_final_payment' && myProposals.sent.some(p => p.id === selectedProposal.id)">
+            <button class="btn-modal pay" @click="payFinalPayment">
+              💳 Pay Final Amount (R$ {{ transactionFinalAmount.toFixed(2) }})
+            </button>
+          </template>
+
+          <!-- 尾款：买家已支付，卖家确认 -->
+          <template v-if="transactionStatus === 'final_payment_paid' && myProposals.received.some(p => p.id === selectedProposal.id)">
+            <button class="btn-modal accept" @click="confirmPaymentReceipt">
+              ✅ Confirm Receipt & Refund Deposit
+            </button>
+          </template>
+
+          <!-- 状态提示 -->
+          <div v-if="transactionStatus === 'final_payment_paid' && myProposals.sent.some(p => p.id === selectedProposal.id)" class="footer-hint">
+            Final payment sent. Waiting for seller confirmation.
+          </div>
+          <div v-if="transactionStatus === 'awaiting_final_payment' && myProposals.received.some(p => p.id === selectedProposal.id)" class="footer-hint">
+            Waiting for buyer to pay final amount.
+          </div>
+
+          <button class="btn-modal secondary" @click="showDetailModal = false">Close Window</button>
         </div>
 
       </div>
@@ -1229,37 +1016,7 @@ const formatTargets = (targets) => {
   .stats-bar { overflow-x: auto; padding-bottom: 10px; }
   .stat-item { min-width: 120px; }
   .entry-cards, .action-grid, .listings-grid { grid-template-columns: 1fr !important; display: grid !important; }
-  /* Overview Section Styles */
-.overview-section { padding: 20px 0; }
-.action-card { background: white; border: 1px solid #e0e0e0; border-radius: 12px; padding: 20px; margin-bottom: 15px; transition: all 0.2s; }
-.action-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); transform: translateY(-2px); }
-.payment-card { border-left: 4px solid #f39c12; }
-.confirm-card { border-left: 4px solid #27ae60; }
-
-.card-header-action { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
-.card-header-action strong { display: block; font-size: 1.1rem; color: #2c3e50; margin-bottom: 5px; }
-.card-subtitle { font-size: 0.85rem; color: #7f8c8d; margin: 0; }
-.amount-badge { background: #f39c12; color: white; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 1.1rem; }
-.amount-badge.success { background: #27ae60; }
-
-.card-details { display: flex; gap: 20px; margin-bottom: 15px; flex-wrap: wrap; }
-.detail-item { display: flex; flex-direction: column; }
-.detail-item .label { font-size: 0.8rem; color: #95a5a6; margin-bottom: 4px; }
-.detail-item span:not(.label) { font-weight: 600; color: #2c3e50; }
-
-.btn-action-primary { width: 100%; padding: 12px; background: #f39c12; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-.btn-action-primary:hover { background: #e67e22; }
-.btn-action-success { width: 100%; padding: 12px; background: #27ae60; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-.btn-action-success:hover { background: #219150; }
-
-.quick-actions { margin-top: 40px; }
-.actions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 15px; }
-.action-tile { background: white; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-.action-tile:hover { border-color: #3498db; box-shadow: 0 4px 12px rgba(52, 152, 219, 0.1); transform: translateY(-2px); }
-.action-icon { font-size: 2rem; }
-.action-label { font-size: 0.9rem; color: #555; font-weight: 500; }
-
-.mobile-tab-bar { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; height: 70px; background: white; border-top: 1px solid #eee; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 1000; justify-content: space-around; align-items: center; padding-bottom: 10px; }
+  .mobile-tab-bar { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; height: 70px; background: white; border-top: 1px solid #eee; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 1000; justify-content: space-around; align-items: center; padding-bottom: 10px; }
   .tab-link { display: flex; flex-direction: column; align-items: center; justify-content: center; color: #999; font-size: 0.7rem; flex: 1; height: 100%; cursor: pointer; }
   .tab-link.active { color: #2c3e50; font-weight: 600; }
   .tab-icon { font-size: 1.4rem; margin-bottom: 2px; }
